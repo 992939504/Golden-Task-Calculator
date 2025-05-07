@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>黄金任务识别法</title>
+    <style>
+        :root {
+            --primary-color: #f2c94c;
+            --secondary-color: #333;
+            --background-color: #f9f9f9;
+            --card-color: #fff;
+            --border-color: #e0e0e0;
+            --success-color: #27ae60;
+            --danger-color: #eb5757;
+            --text-color: #333;
+            --text-light: #666;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            margin: 20px 0 15px;
+            font-weight: 500;
+            font-size: 1.5rem;
+        }
+
+        .description {
+            color: var(--text-light);
+            max-width: 800px;
+            margin: 0 auto 20px;
+            font-size: 1rem;
+        }
+
+        .card {
+            background-color: var(--card-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .weights-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .weight-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .weight-item label {
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .weight-value {
+            display: inline-block;
+            width: 40px;
+            text-align: center;
+            margin-left: 10px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            background: #ddd;
+            outline: none;
+            border-radius: 4px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .task-form {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        input[type="text"], textarea {
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .ratings-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .rating-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rating-item label {
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .rating-item label span {
+            font-weight: normal;
+            color: var(--text-light);
+            margin-left: 5px;
+        }
+
+        input[type="range"].rating-slider {
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: #e0b93e;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #d64545;
+        }
+
+        .tasks-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .tasks-table th, .tasks-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        .tasks-table th {
+            background-color: #f2f2f2;
+            font-weight: 600;
+        }
+
+        .tasks-table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .tasks-table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .task-actions button {
+            margin-right: 5px;
+            padding: 5px 10px; /* Smaller buttons */
+            font-size: 0.9rem;
+        }
+
+        .task-description-row {
+            display: none; /* Hidden by default */
+        }
+
+        .task-description-cell {
+            padding: 10px 15px;
+            background-color: #fdfdfd;
+            color: var(--text-light);
+            font-size: 0.95rem;
+            border-top: 1px dashed var(--border-color);
+        }
+        
+        /* 任务描述在卡片内显示的样式 */
+        .task-description-content {
+            display: none;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed var(--border-color);
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .toggle-description {
+            cursor: pointer;
+            display: inline-block;
+            margin-right: 8px;
+            font-weight: bold;
+            color: var(--primary-color);
+            transition: transform 0.2s ease;
+        }
+
+        .toggle-description.expanded {
+            transform: rotate(90deg);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-light);
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .weights-container, .ratings-container {
+                grid-template-columns: 1fr;
+            }
+
+            .tasks-table thead {
+                display: none; /* Hide table header on small screens */
+            }
+            .tasks-table, .tasks-table tbody, .tasks-table tr, .tasks-table td {
+                display: block;
+                width: 100%;
+            }
+            .tasks-table tr {
+                margin-bottom: 15px;
+                border: 1px solid var(--border-color);
+                border-radius: 4px;
+                padding: 10px;
+            }
+            .tasks-table td {
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+                border: none;
+                padding-top: 5px;
+                padding-bottom: 5px;
+            }
+            .tasks-table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                width: calc(50% - 20px);
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left;
+                font-weight: bold;
+                color: var(--secondary-color);
+            }
+            .tasks-table td:last-child {
+                 text-align: center; /* Center action buttons */
+                 padding-left: 0;
+            }
+            .tasks-table td:last-child::before {
+                content: ''; /* Remove label for action column */
+            }
+        }
+
+        /* 移动端适配样式结束 */
+    </style>
+</head>
+<body>
+    <header>
+        <h1>黄金任务识别法</h1>
+        <p class="description">一个基于多维度评分和权重调整的任务优先级排序工具，帮助您识别并专注于最有价值的任务。</p>
+    </header>
+
+    <main>
+        <!-- 任务列表 -->
+        <section class="card" id="tasks-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h2>任务列表</h2>
+                <button id="clear-all-tasks-btn" class="btn btn-danger btn-sm" style="padding: 5px 10px; font-size: 0.9rem;">清空所有任务</button>
+            </div>
+            <div class="table-container">
+                <table class="tasks-table">
+                    <thead>
+                        <tr>
+                            <th>任务名称</th>
+                            <th>技能匹配度</th>
+                            <th>经济回报</th>
+                            <th>战略价值</th>
+                            <th>驱动力</th>
+                            <th>紧迫性</th>
+                            <th>总分</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tasks-body">
+                        <!-- 任务列表将通过JavaScript动态生成 -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="empty-state" class="empty-state">
+                <p>暂无任务，请添加您的第一个任务</p>
+            </div>
+        </section>
+
+        <!-- 添加新任务 -->
+        <section class="card" id="add-task-section">
+            <h2>添加新任务</h2>
+            <form id="task-form" class="task-form">
+                <div class="form-group">
+                    <label for="task-name">任务名称</label>
+                    <input type="text" id="task-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="task-description">任务描述（可选）</label>
+                    <textarea id="task-description"></textarea>
+                </div>
+                
+                <h3>任务评分 (1-10分)</h3>
+                <div class="ratings-container">
+                    <div class="rating-item">
+                        <label for="rating-skill">技能匹配度 <span id="skill-value">0</span></label>
+                        <input type="range" id="rating-skill" class="rating-slider" data-rating-type="skill" min="1" max="10" value="1">
+                    </div>
+                    <div class="rating-item">
+                        <label for="rating-money">经济回报 <span id="money-value">0</span></label>
+                        <input type="range" id="rating-money" class="rating-slider" data-rating-type="money" min="1" max="10" value="1">
+                    </div>
+                    <div class="rating-item">
+                        <label for="rating-strategy">战略价值 <span id="strategy-value">0</span></label>
+                        <input type="range" id="rating-strategy" class="rating-slider" data-rating-type="strategy" min="1" max="10" value="1">
+                    </div>
+                    <div class="rating-item">
+                        <label for="rating-passion">驱动力 <span id="passion-value">0</span></label>
+                        <input type="range" id="rating-passion" class="rating-slider" data-rating-type="passion" min="1" max="10" value="1">
+                    </div>
+                    <div class="rating-item">
+                        <label for="rating-urgency">紧迫性 <span id="urgency-value">0</span></label>
+                        <input type="range" id="rating-urgency" class="rating-slider" data-rating-type="urgency" min="1" max="10" value="1">
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary">添加任务</button>
+                    <button type="button" id="reset-button" class="btn" style="background-color: #ccc; color: #333;">重置</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- 权重调整 -->
+        <section class="card" id="weights-section">
+            <h2>调整维度权重</h2>
+            <div class="weights-container">
+                <div class="weight-item">
+                    <label for="weight-skill">技能匹配度: <span id="weight-skill-value" class="weight-value">3</span></label>
+                    <input type="range" id="weight-skill" class="weight-slider" min="1" max="5" value="3">
+                </div>
+                <div class="weight-item">
+                    <label for="weight-money">经济回报: <span id="weight-money-value" class="weight-value">3</span></label>
+                    <input type="range" id="weight-money" class="weight-slider" min="1" max="5" value="3">
+                </div>
+                <div class="weight-item">
+                    <label for="weight-strategy">战略价值: <span id="weight-strategy-value" class="weight-value">3</span></label>
+                    <input type="range" id="weight-strategy" class="weight-slider" min="1" max="5" value="3">
+                </div>
+                <div class="weight-item">
+                    <label for="weight-passion">驱动力: <span id="weight-passion-value" class="weight-value">3</span></label>
+                    <input type="range" id="weight-passion" class="weight-slider" min="1" max="5" value="3">
+                </div>
+                <div class="weight-item">
+                    <label for="weight-urgency">紧迫性: <span id="weight-urgency-value" class="weight-value">2</span></label>
+                    <input type="range" id="weight-urgency" class="weight-slider" min="1" max="5" value="2">
+                </div>
+            </div>
+        </section>
+        
+        <!-- 计算说明按钮 -->
+        <div style="text-align: center; margin-top: 20px;">
+            <button id="show-calculation-btn" class="btn btn-primary">计算说明</button>
+        </div>
+        
+        <!-- 计算说明弹窗 -->
+        <div id="calculation-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; overflow-y: auto;">
+            <div style="background-color: white; max-width: 800px; margin: 50px auto; padding: 30px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2>关于总得分计算</h2>
+                    <button id="close-modal-btn" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">×</button>
+                </div>
+                
+                <div id="calculation-content">
+                    <p>您在任务列表看到的"总分"，是根据您为每个任务在五个维度上的评分（1-10分）以及您设定的各维度权重（1-5分），通过以下<strong>黄金任务价值计算公式</strong>得出的：</p>
+                    
+                    <p style="text-align: center; margin: 20px 0;">
+                        $$ \text{总分} = \frac{\sqrt{v_1^2 \times w_1 + v_2^2 \times w_2 + v_3^2 \times w_3 + v_4^2 \times w_4 + v_5^2 \times w_5}}{\sqrt{10^2 \times (w_1 + w_2 + w_3 + w_4 + w_5)}} $$
+                    </p>
+                    
+                    <p>其中：</p>
+                    <ul>
+                        <li>$v_i$ 代表任务在第 $i$ 个维度上的评分（1-10分）</li>
+                        <li>$w_i$ 代表您设定的第 $i$ 个维度的权重（1-5分）</li>
+                        <li>五个维度分别是：技能匹配度 ($i=1$)、经济回报 ($i=2$)、战略价值 ($i=3$)、驱动力 ($i=4$)、紧迫性 ($i=5$)</li>
+                    </ul>
+                    
+                    <p>这个公式旨在更全面、更精准地反映任务的综合价值。</p>
+                    
+                    <h3>简单来说，这个公式的核心思想是：</h3>
+                    <ol>
+                        <li><strong>加权考量每个维度：</strong> 您的评分 `v` 会乘以对应维度的权重 `w`。权重越高的维度，对最终总分的影响越大。</li>
+                        <li><strong>突出高分价值（平方效应）：</strong> 公式中使用了评分的平方（`v²`）。这意味着在某个重要维度上获得高分（例如8分、9分、10分），对总分的提升作用会比低分（例如1分、2分）大得多。这帮助我们更好地识别那些在关键方面表现突出的、具有"黄金"特质的任务。</li>
+                        <li><strong>标准化比较：</strong> 公式中的分母部分，确保了最终的总分被标准化，最高分接近1。这使得不同任务之间的总分可以直接比较，清晰地看出它们的相对优先级。</li>
+                    </ol>
+                    
+                    <h3>为什么采用这个公式？</h3>
+                    <p>我们采用这个公式，是因为它不仅仅是简单的加权平均。它能更有效地帮助您识别那些在您设定的重要维度上同时获得较高评分的任务。一个在所有维度上都得分平平的任务，可能不如一个在您最看重的某个或某几个维度上得分非常高的任务。这能帮助您更精准地找出那些真正符合您当前战略重心和价值追求的"黄金任务"。</p>
+                    
+                    <p>通过调整权重，您可以个性化这个计算过程，让总分更好地反映您心目中"最有价值任务"的样子，从而更有效地指导您的时间和精力投入。</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p style="text-align: center; padding: 20px; color: var(--text-light);">付费用户专属，制作者：酷玩99</p>
+    </footer>
+
+    <script>
+        console.log("制作者：酷玩99"); // 在控制台输出制作者信息
+        
+        // 计算说明弹窗交互
+        document.getElementById('show-calculation-btn').addEventListener('click', function() {
+            document.getElementById('calculation-modal').style.display = 'block';
+        });
+        
+        document.getElementById('close-modal-btn').addEventListener('click', function() {
+            document.getElementById('calculation-modal').style.display = 'none';
+        });
+        
+        // 点击模态框外部关闭
+        document.getElementById('calculation-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+        // 存储任务数据
+        let tasks = JSON.parse(localStorage.getItem('goldenTasks')) || [];
+        
+        // 存储权重数据
+        let weights = JSON.parse(localStorage.getItem('goldenWeights')) || {
+            skill: 3,
+            money: 3,
+            strategy: 3,
+            passion: 3,
+            urgency: 2
+        };
+
+        // 初始化权重滑块
+        document.querySelectorAll('.weight-slider').forEach(slider => {
+            const type = slider.id.split('-')[1];
+            slider.value = weights[type];
+            document.getElementById(`weight-${type}-value`).textContent = weights[type];
+            
+            slider.addEventListener('input', function() {
+                const value = parseInt(this.value);
+                weights[type] = value;
+                document.getElementById(`weight-${type}-value`).textContent = value;
+                saveWeights();
+                updateTaskScores();
+                renderTasks(); // 权重变化后重新渲染任务列表以更新分数
+            });
+        });
+
+        // 保存权重到本地存储
+        function saveWeights() {
+            localStorage.setItem('goldenWeights', JSON.stringify(weights));
+        }
+
+        // 初始化评分对象
+        let ratings = {
+            skill: 1,
+            money: 1,
+            strategy: 1,
+            passion: 1,
+            urgency: 1
+        };
+
+        // 初始化评分滑块事件监听
+        document.querySelectorAll('.rating-slider').forEach(slider => {
+            const type = slider.dataset.ratingType;
+            const valueSpan = document.getElementById(`${type}-value`);
+            
+            // 初始化显示
+            valueSpan.textContent = slider.value;
+            ratings[type] = parseInt(slider.value);
+
+            slider.addEventListener('input', function() {
+                const value = parseInt(this.value);
+                valueSpan.textContent = value;
+                ratings[type] = value;
+            });
+        });
+
+        // 表单提交处理
+        document.getElementById('task-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const taskName = document.getElementById('task-name').value.trim();
+            const taskDescription = document.getElementById('task-description').value.trim();
+            
+            if (!taskName) {
+                alert('请输入任务名称');
+                return;
+            }
+            
+            // 检查是否所有维度都已评分 (现在是检查是否大于0，因为滑块最小值是1，初始是0)
+            const hasAllRatings = Object.values(ratings).every(value => value > 0);
+            if (!hasAllRatings) {
+                alert('请为所有维度评分 (选择1-10分)');
+                return;
+            }
+            
+            // 计算总分
+            const totalScore = calculateScore(ratings, weights);
+            
+            // 创建新任务对象
+            const newTask = {
+                id: Date.now(),
+                name: taskName,
+                description: taskDescription,
+                ratings: {...ratings},
+                score: totalScore
+            };
+            
+            // 检查是否存在同名任务
+            const existingTaskIndex = tasks.findIndex(task => task.name === taskName);
+
+            if (existingTaskIndex !== -1) {
+                // 替换现有任务
+                if (confirm(`已存在同名任务 "${taskName}"。是否要替换它？`)) {
+                    tasks[existingTaskIndex] = newTask;
+                } else {
+                    // 用户取消替换，则不执行任何操作
+                    return; 
+                }
+            } else {
+                // 添加新任务
+                tasks.push(newTask);
+            }
+
+            saveTasks();
+            renderTasks();
+            
+            // 重置表单
+            this.reset();
+            resetForm();
+        });
+
+        // 重置按钮处理
+        document.getElementById('reset-button').addEventListener('click', resetForm);
+
+        // 重置表单函数
+        function resetForm() {
+            document.getElementById('task-form').reset();
+            resetRatings();
+        }
+
+        // 重置评分
+        function resetRatings() {
+            Object.keys(ratings).forEach(key => {
+                ratings[key] = 0;
+                const slider = document.getElementById(`rating-${key}`);
+                slider.value = 0;
+                document.getElementById(`${key}-value`).textContent = '0';
+            });
+        }
+
+        // 计算任务得分
+        function calculateScore(taskRatings, weights) {
+            let numerator = 0;
+            let weightSum = 0;
+            
+            Object.keys(taskRatings).forEach(key => {
+                numerator += Math.pow(taskRatings[key], 2) * weights[key];
+                weightSum += weights[key];
+            });
+            
+            numerator = Math.sqrt(numerator);
+            const denominator = Math.sqrt(100 * weightSum);
+            
+            return (numerator / denominator).toFixed(2); // 保留两位小数
+        }
+
+        // 更新所有任务的得分
+        function updateTaskScores() {
+            tasks.forEach(task => {
+                task.score = calculateScore(task.ratings, weights);
+            });
+            saveTasks();
+        }
+
+        // 保存任务到本地存储
+        function saveTasks() {
+            localStorage.setItem('goldenTasks', JSON.stringify(tasks));
+        }
+
+        // 渲染任务列表
+        function renderTasks() {
+            const tasksBody = document.getElementById('tasks-body');
+            const emptyState = document.getElementById('empty-state');
+            tasksBody.innerHTML = ''; // 清空现有列表
+
+            if (tasks.length === 0) {
+                emptyState.style.display = 'block';
+                document.querySelector('.table-container').style.display = 'none';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            document.querySelector('.table-container').style.display = 'block';
+
+            // 按得分降序排序
+            const sortedTasks = [...tasks].sort((a, b) => b.score - a.score);
+            const tableContainer = document.querySelector('.table-container');
+            const clearAllBtn = document.getElementById('clear-all-tasks-btn');
+
+            if (tasks.length === 0) {
+                emptyState.style.display = 'block';
+                tableContainer.style.display = 'none';
+                clearAllBtn.style.display = 'none'; // Hide clear button when no tasks
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            tableContainer.style.display = 'block';
+            clearAllBtn.style.display = 'inline-block'; // Show clear button
+
+            sortedTasks.forEach(task => {
+                const row = tasksBody.insertRow();
+                row.innerHTML = `
+                    <td data-label="任务名称">
+                        ${task.description ? `<span class="toggle-description" onclick="toggleDescription(${task.id})">▶</span>` : '<span style="display: inline-block; width: 1.2em;"></span>'}
+                        ${escapeHtml(task.name)}
+                        ${task.description ? `<div id="desc-${task.id}" class="task-description-content">${escapeHtml(task.description)}</div>` : ''}
+                    </td>
+                    <td data-label="技能匹配度">${task.ratings.skill}</td>
+                    <td data-label="经济回报">${task.ratings.money}</td>
+                    <td data-label="战略价值">${task.ratings.strategy}</td>
+                    <td data-label="驱动力">${task.ratings.passion}</td>
+                    <td data-label="紧迫性">${task.ratings.urgency}</td>
+                    <td data-label="总分">${task.score}</td>
+                    <td data-label="操作" class="task-actions">
+                        <button class="btn btn-danger btn-sm" onclick="deleteTask(${task.id})">删除</button>
+                    </td>
+                `;
+                // 不再添加单独的描述行，描述已经内嵌在任务名称单元格中
+            });
+
+            // 移动端适配已经通过CSS处理
+        }
+
+        /* 移动端适配样式结束 */
+
+        // 删除任务
+        function deleteTask(id) {
+            if (confirm('确定要删除这个任务吗？')) {
+                tasks = tasks.filter(task => task.id !== id);
+                saveTasks();
+                renderTasks();
+            }
+        }
+
+        /* 移动端适配样式结束 */
+
+        // HTML 转义函数，防止 XSS
+        function escapeHtml(unsafe) {
+            return unsafe
+                 .replace(/&/g, "&amp;")
+                 .replace(/</g, "&lt;")
+                 .replace(/>/g, "&gt;")
+                 .replace(/"/g, "&quot;")
+                 .replace(/'/g, "&#039;");
+        }
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTasks();
+        });
+
+        // 清空所有任务按钮处理
+        document.getElementById('clear-all-tasks-btn').addEventListener('click', clearAllTasks);
+        
+        // 切换任务描述显示
+        function toggleDescription(id) {
+            const descriptionContent = document.getElementById(`desc-${id}`);
+            const toggleArrow = document.querySelector(`.toggle-description[onclick="toggleDescription(${id})"]`);
+            if (descriptionContent.style.display === 'none' || descriptionContent.style.display === '') {
+                descriptionContent.style.display = 'block';
+                toggleArrow.classList.add('expanded');
+                toggleArrow.innerHTML = '▼';
+            } else {
+                descriptionContent.style.display = 'none';
+                toggleArrow.classList.remove('expanded');
+                toggleArrow.innerHTML = '▶';
+            }
+        }
+        
+        // 清空所有任务
+        function clearAllTasks() {
+            if (confirm('确定要清空所有任务吗？此操作不可恢复。')) {
+                tasks = [];
+                saveTasks();
+                renderTasks();
+            }
+        }
+    </script>
+</body>
+</html>
