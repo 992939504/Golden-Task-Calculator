@@ -4,17 +4,145 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>黄金任务识别法</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 220px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%; /* Position the tooltip above the icon */
+            left: 50%;
+            margin-left: -110px; /* Use half of the width (220/2 = 110) to center the tooltip */
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%; /* At the bottom of the tooltip */
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        .info-icon {
+            margin-left: 8px;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
         :root {
-            --primary-color: #f2c94c;
-            --secondary-color: #333;
-            --background-color: #f9f9f9;
-            --card-color: #fff;
-            --border-color: #e0e0e0;
+            --primary-color: #805ad5; /* 紫色 */
+            --secondary-color: #f2c94c; /* 金色 */
+            --background-color: #1a1a2e; /* 深科技蓝背景 */
+            --card-color: rgba(23, 23, 39, 0.85); /* 深蓝紫色卡片背景，带透明度 */
+            --border-color: rgba(128, 90, 213, 0.4); /* 紫色边框 */
             --success-color: #27ae60;
             --danger-color: #eb5757;
-            --text-color: #333;
-            --text-light: #666;
+            --text-color: #e0e0e0; /* 浅色文字 */
+            --text-light: #a0aec0; /* 较浅的文字，用于次要信息 */
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header h1 {
+            color: var(--secondary-color); /* 金色标题 */
+        }
+
+        h2 {
+            color: var(--secondary-color); /* 金色二级标题 */
+        }
+
+        .description {
+            color: var(--text-light);
+        }
+
+        .card {
+            background-color: var(--card-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .weight-item label, .form-group label, .rating-item label {
+            color: var(--text-color);
+        }
+
+        input[type="text"], textarea {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+        input[type="text"]::placeholder, textarea::placeholder {
+            color: var(--text-light);
+        }
+
+        input[type="range"] {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            background: var(--primary-color); /* 紫色滑块 */
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: #fff; /* 白色文字以确保对比度 */
+        }
+
+        .btn-primary:hover {
+            background-color: #6b46c1; /* 深一点的紫色 */
+        }
+
+        .tasks-table th {
+            background-color: rgba(45, 55, 72, 0.7); /* 深蓝灰色表头 */
+            color: var(--secondary-color); /* 金色表头文字 */
+        }
+
+        .tasks-table tbody tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.03);
+        }
+
+        .tasks-table tbody tr:hover {
+            background-color: rgba(128, 90, 213, 0.2); /* 悬停时淡紫色高亮 */
+        }
+
+        .empty-state p {
+            color: var(--text-light);
+        }
+
+        .tooltip .tooltiptext {
+            background-color: #333; /* 深色提示框背景 */
+            color: #f2f2f2; /* 更亮的文字颜色，提高可读性 */
+            font-weight: 500; /* 稍微加粗 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 添加阴影增强可读性 */
+        }
+        .tooltip .tooltiptext::after {
+            border-color: #333 transparent transparent transparent;
+        }
+        .info-icon {
+            color: var(--secondary-color); /* 金色图标 */
         }
 
         * {
@@ -52,6 +180,46 @@
             font-weight: 500;
             font-size: 1.5rem;
         }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            h2 {
+                font-size: 1.2rem;
+                margin: 15px 0 10px;
+            }
+            
+            .description {
+                font-size: 0.9rem;
+                margin-bottom: 15px;
+            }
+            
+            p, label, input, button, .btn {
+                font-size: 0.9rem;
+            }
+            
+            .task-form {
+                gap: 10px;
+            }
+            
+            input[type="text"], textarea {
+                padding: 8px 12px;
+            }
+            
+            .btn {
+                padding: 8px 15px;
+            }
+            
+            .empty-state {
+                padding: 25px 15px;
+            }
+            
+            .empty-state p {
+                font-size: 1rem;
+            }
+        }
 
         .description {
             color: var(--text-light);
@@ -66,6 +234,14 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             padding: 25px;
             margin-bottom: 25px;
+        }
+        
+        @media (max-width: 768px) {
+            .card {
+                padding: 15px;
+                margin-bottom: 15px;
+                border-radius: 6px;
+            }
         }
 
         .weights-container {
@@ -206,19 +382,22 @@
             padding: 12px 15px;
             text-align: left;
         }
-
-        .tasks-table th {
-            background-color: #f2f2f2;
-            font-weight: 600;
+        
+        /* 任务名称和总分卡片样式 */
+        .tasks-table td:first-child,
+        .tasks-table td:nth-child(7) {
+            background-color: var(--card-color);
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            padding: 15px;
+            margin: 5px 0;
         }
 
-        .tasks-table tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
+        /* .tasks-table th style is now handled in the updated :root and body scope */
 
-        .tasks-table tbody tr:hover {
-            background-color: #f1f1f1;
-        }
+        /* .tasks-table tbody tr:nth-child(even) style is now handled in the updated :root and body scope */
+
+        /* .tasks-table tbody tr:hover style is now handled in the updated :root and body scope */
 
         .task-actions button {
             margin-right: 5px;
@@ -277,46 +456,133 @@
         @media (max-width: 768px) {
             .weights-container, .ratings-container {
                 grid-template-columns: 1fr;
+                gap: 10px;
+                margin-bottom: 15px;
+            }
+            
+            .weight-item, .rating-item {
+                margin-bottom: 5px;
+            }
+            
+            .weight-item label, .rating-item label {
+                margin-bottom: 3px;
+                font-size: 0.9rem;
+            }
+            
+            input[type="range"] {
+                height: 6px;
+            }
+            
+            input[type="range"]::-webkit-slider-thumb {
+                width: 16px;
+                height: 16px;
             }
 
             .tasks-table thead {
                 display: none; /* Hide table header on small screens */
             }
-            .tasks-table, .tasks-table tbody, .tasks-table tr, .tasks-table td {
+            .tasks-table, .tasks-table tbody {
                 display: block;
                 width: 100%;
+                overflow-x: hidden; /* 移除水平滚动条 */
             }
             .tasks-table tr {
-                margin-bottom: 15px;
+                display: block;
+                margin-bottom: 10px;
                 border: 1px solid var(--border-color);
                 border-radius: 4px;
-                padding: 10px;
+                padding: 8px 10px;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+                background-color: #fff;
+                position: relative;
             }
             .tasks-table td {
-                text-align: right;
-                padding-left: 50%;
-                position: relative;
+                display: none; /* 默认隐藏所有单元格 */
+                padding: 5px 10px;
+                margin-top: 5px;
                 border: none;
-                padding-top: 5px;
-                padding-bottom: 5px;
+                text-align: left;
+                width: 100%;
+            }
+            /* 只显示任务名称、总分和删除按钮 */
+            .tasks-table td:first-child,
+            .tasks-table td:nth-child(7),
+            .tasks-table td:last-child {
+                display: block;
+            }
+            /* 任务名称单元格样式 */
+            .tasks-table td:first-child {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-weight: bold;
+                font-size: 1em;
+                color: var(--text-color);
+                padding: 5px 0;
+                border-bottom: none;
+            }
+            /* 总分单元格样式 - 在移动端布局中隐藏，因为已经集成到任务名称行 */
+            .tasks-table td:nth-child(7) {
+                display: none;
+            }
+            /* 操作按钮单元格样式 - 在移动端布局中隐藏，因为已经集成到任务名称行 */
+            .tasks-table td:last-child {
+                display: none;
+            }
+            /* 移动端任务行头部样式 */
+            .mobile-task-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                margin-bottom: 5px;
+            }
+            /* 展开/折叠箭头样式 */
+            .toggle-details {
+                cursor: pointer;
+                font-size: 1.2em;
+                color: var(--text-light);
+                transition: transform 0.3s ease;
+                margin-left: 5px;
+            }
+            .toggle-details.expanded {
+                transform: rotate(180deg);
+            }
+            /* 任务按钮展开状态样式 */
+            button.expanded {
+                background-color: #2a6fc9 !important;
+                box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            }
+            /* 任务描述在移动端卡片中的显示样式 */
+            .task-description-content {
+                margin: 5px 0;
+                padding: 5px;
+                background-color: #f9f9f9;
+                border-radius: 3px;
+                font-size: 0.85em;
+                color: var(--text-light);
+                text-align: left;
+                white-space: normal;
+                width: 100%;
+                display: block;
             }
             .tasks-table td::before {
                 content: attr(data-label);
-                position: absolute;
-                left: 10px;
-                width: calc(50% - 20px);
-                padding-right: 10px;
-                white-space: nowrap;
-                text-align: left;
+                display: block;
                 font-weight: bold;
                 color: var(--secondary-color);
+                text-align: left;
+                margin-bottom: 3px;
+                font-size: 0.75em;
             }
-            .tasks-table td:last-child {
-                 text-align: center; /* Center action buttons */
-                 padding-left: 0;
-            }
+            .tasks-table td:first-child::before,
+            .tasks-table td:nth-child(7)::before,
             .tasks-table td:last-child::before {
-                content: ''; /* Remove label for action column */
+                display: none; /* 不显示标签 */
+            }
+            /* 展开时显示所有单元格 */
+            .tasks-table tr.expanded td {
+                display: block;
             }
         }
 
@@ -376,23 +642,48 @@
                 <h3>任务评分 (1-10分)</h3>
                 <div class="ratings-container">
                     <div class="rating-item">
-                        <label for="rating-skill">技能匹配度 <span id="skill-value">0</span></label>
+                        <label for="rating-skill">技能匹配度 <span id="skill-value">0</span>
+                            <span class="tooltip">
+                                <i class="fas fa-info-circle info-icon"></i>
+                                <span class="tooltiptext">任务与您当前技能的契合程度，以及执行此任务是否能显著提升您的核心技能。</span>
+                            </span>
+                        </label>
                         <input type="range" id="rating-skill" class="rating-slider" data-rating-type="skill" min="1" max="10" value="1">
                     </div>
                     <div class="rating-item">
-                        <label for="rating-money">经济回报 <span id="money-value">0</span></label>
+                        <label for="rating-money">经济回报 <span id="money-value">0</span>
+                            <span class="tooltip">
+                                <i class="fas fa-info-circle info-icon"></i>
+                                <span class="tooltiptext">完成此任务可能带来的直接或间接经济收益，例如收入增加、成本节约或新的商业机会。</span>
+                            </span>
+                        </label>
                         <input type="range" id="rating-money" class="rating-slider" data-rating-type="money" min="1" max="10" value="1">
                     </div>
                     <div class="rating-item">
-                        <label for="rating-strategy">战略价值 <span id="strategy-value">0</span></label>
+                        <label for="rating-strategy">战略价值 <span id="strategy-value">0</span>
+                            <span class="tooltip">
+                                <i class="fas fa-info-circle info-icon"></i>
+                                <span class="tooltiptext">此任务对您长期目标和个人/职业发展规划的贡献程度。</span>
+                            </span>
+                        </label>
                         <input type="range" id="rating-strategy" class="rating-slider" data-rating-type="strategy" min="1" max="10" value="1">
                     </div>
                     <div class="rating-item">
-                        <label for="rating-passion">驱动力 <span id="passion-value">0</span></label>
+                        <label for="rating-passion">驱动力 <span id="passion-value">0</span>
+                            <span class="tooltip">
+                                <i class="fas fa-info-circle info-icon"></i>
+                                <span class="tooltiptext">您对此任务的内在兴趣、热情和积极性。高度的驱动力通常能带来更好的持续性和创造力。</span>
+                            </span>
+                        </label>
                         <input type="range" id="rating-passion" class="rating-slider" data-rating-type="passion" min="1" max="10" value="1">
                     </div>
                     <div class="rating-item">
-                        <label for="rating-urgency">紧迫性 <span id="urgency-value">0</span></label>
+                        <label for="rating-urgency">紧迫性 <span id="urgency-value">0</span>
+                            <span class="tooltip">
+                                <i class="fas fa-info-circle info-icon"></i>
+                                <span class="tooltiptext">任务是否有明确的时间限制或截止日期，以及延迟完成可能带来的负面影响。</span>
+                            </span>
+                        </label>
                         <input type="range" id="rating-urgency" class="rating-slider" data-rating-type="urgency" min="1" max="10" value="1">
                     </div>
                 </div>
@@ -438,7 +729,7 @@
         
         <!-- 计算说明弹窗 -->
         <div id="calculation-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; overflow-y: auto;">
-            <div style="background-color: white; max-width: 800px; margin: 50px auto; padding: 30px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+            <div style="background-color: white; max-width: 800px; margin: 50px auto; padding: 30px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); color: black;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <h2>关于总得分计算</h2>
                     <button id="close-modal-btn" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">×</button>
@@ -477,7 +768,7 @@
     </main>
 
     <footer>
-        <p style="text-align: center; padding: 20px; color: var(--text-light);">付费用户专属，制作者：酷玩99</p>
+        <p style="text-align: center; padding: 20px; color: var(--text-light);">制作者：酷玩99</p>
     </footer>
 
     <script>
@@ -690,25 +981,59 @@
             tableContainer.style.display = 'block';
             clearAllBtn.style.display = 'inline-block'; // Show clear button
 
+            // 检测是否为移动设备
+            const isMobile = window.innerWidth <= 768;
+            
             sortedTasks.forEach(task => {
                 const row = tasksBody.insertRow();
-                row.innerHTML = `
-                    <td data-label="任务名称">
-                        ${task.description ? `<span class="toggle-description" onclick="toggleDescription(${task.id})">▶</span>` : '<span style="display: inline-block; width: 1.2em;"></span>'}
-                        ${escapeHtml(task.name)}
-                        ${task.description ? `<div id="desc-${task.id}" class="task-description-content">${escapeHtml(task.description)}</div>` : ''}
-                    </td>
-                    <td data-label="技能匹配度">${task.ratings.skill}</td>
-                    <td data-label="经济回报">${task.ratings.money}</td>
-                    <td data-label="战略价值">${task.ratings.strategy}</td>
-                    <td data-label="驱动力">${task.ratings.passion}</td>
-                    <td data-label="紧迫性">${task.ratings.urgency}</td>
-                    <td data-label="总分">${task.score}</td>
-                    <td data-label="操作" class="task-actions">
-                        <button class="btn btn-danger btn-sm" onclick="deleteTask(${task.id})">删除</button>
-                    </td>
-                `;
-                // 不再添加单独的描述行，描述已经内嵌在任务名称单元格中
+                
+                // 移动端布局 - 卡片式任务名称和总分
+                if (isMobile) {
+                    row.innerHTML = `
+                        <td data-label="任务名称" style="background-color: var(--card-color); border-radius: 6px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
+                            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                                <button class="btn btn-sm" style="background-color: #4a90e2; color: white; padding: 5px 10px; border-radius: 4px; border: none; cursor: pointer;" onclick="toggleDetails(${task.id}, this)">${escapeHtml(task.name)}</button>
+                                <div style="display: flex; align-items: center;">
+                                    <button class="btn btn-primary btn-sm" style="margin-right: 10px; font-weight: bold; color: var(--secondary-color); font-size: 1.1em;">${task.score}</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteTask(${task.id})">删除</button>
+                                </div>
+                            </div>
+                            ${task.description ? `<div id="desc-${task.id}" class="task-description-content" style="display: none;">${escapeHtml(task.description)}</div>` : ''}
+                        </td>
+                        <td data-label="技能匹配度">${task.ratings.skill}</td>
+                        <td data-label="经济回报">${task.ratings.money}</td>
+                        <td data-label="战略价值">${task.ratings.strategy}</td>
+                        <td data-label="驱动力">${task.ratings.passion}</td>
+                        <td data-label="紧迫性">${task.ratings.urgency}</td>
+                        <td data-label="总分">${task.score}</td>
+                        <td data-label="操作" class="task-actions">
+                            <button class="btn btn-danger btn-sm" onclick="deleteTask(${task.id})">删除</button>
+                        </td>
+                    `;
+                } else {
+                    // 桌面端布局 - 卡片式任务名称和总分
+                    row.innerHTML = `
+                        <td data-label="任务名称" style="background-color: var(--card-color); border-radius: 6px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div>
+                                    <button class="btn btn-sm" style="background-color: #4a90e2; color: white; padding: 5px 10px; border-radius: 4px; border: none; cursor: pointer;" onclick="toggleDescription(${task.id})">${escapeHtml(task.name)}</button>
+                                </div>
+                            </div>
+                            ${task.description ? `<div id="desc-${task.id}" class="task-description-content" style="display: none;">${escapeHtml(task.description)}</div>` : ''}
+                        </td>
+                        <td data-label="技能匹配度">${task.ratings.skill}</td>
+                        <td data-label="经济回报">${task.ratings.money}</td>
+                        <td data-label="战略价值">${task.ratings.strategy}</td>
+                        <td data-label="驱动力">${task.ratings.passion}</td>
+                        <td data-label="紧迫性">${task.ratings.urgency}</td>
+                        <td data-label="总分" style="background-color: var(--card-color); border-radius: 6px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
+                            <button class="btn btn-primary btn-sm" style="font-weight: bold; color: var(--secondary-color); font-size: 1.1em;">${task.score}</button>
+                        </td>
+                        <td data-label="操作" class="task-actions">
+                            <button class="btn btn-danger btn-sm" onclick="deleteTask(${task.id})">删除</button>
+                        </td>
+                    `;
+                }
             });
 
             // 移动端适配已经通过CSS处理
@@ -745,18 +1070,54 @@
         // 清空所有任务按钮处理
         document.getElementById('clear-all-tasks-btn').addEventListener('click', clearAllTasks);
         
-        // 切换任务描述显示
+        // 添加页脚内容
+        const footer = document.createElement('footer');
+        footer.style.textAlign = 'center';
+        footer.style.marginTop = '30px';
+        footer.style.paddingTop = '20px';
+        footer.style.borderTop = '1px solid var(--border-color)';
+        footer.innerHTML = `
+            <div style="margin-bottom: 15px;">
+                <a href="https://www.toutiao.com/article/7504873405502472723/" target="_blank" style="color: var(--secondary-color); text-decoration: none; font-weight: 500; font-size: 1.1rem;">黄金任务法试读</a>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <img src="./imgs/QR.png" alt="二维码" style="width: 150px; height: 150px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+            </div>
+        `;
+        document.body.appendChild(footer);
+        
+        // 切换任务描述显示（桌面端）
         function toggleDescription(id) {
             const descriptionContent = document.getElementById(`desc-${id}`);
-            const toggleArrow = document.querySelector(`.toggle-description[onclick="toggleDescription(${id})"]`);
+            const toggleButton = document.querySelector(`button[onclick="toggleDescription(${id})"]`);
             if (descriptionContent.style.display === 'none' || descriptionContent.style.display === '') {
                 descriptionContent.style.display = 'block';
-                toggleArrow.classList.add('expanded');
-                toggleArrow.innerHTML = '▼';
+                toggleButton.classList.add('expanded');
             } else {
                 descriptionContent.style.display = 'none';
-                toggleArrow.classList.remove('expanded');
-                toggleArrow.innerHTML = '▶';
+                toggleButton.classList.remove('expanded');
+            }
+        }
+        
+        // 切换任务详细信息显示（移动端）
+        function toggleDetails(id, element) {
+            const row = element.closest('tr');
+            const descriptionContent = document.getElementById(`desc-${id}`);
+            
+            if (row.classList.contains('expanded')) {
+                // 折叠详细信息
+                row.classList.remove('expanded');
+                element.classList.remove('expanded');
+                if (descriptionContent) {
+                    descriptionContent.style.display = 'none';
+                }
+            } else {
+                // 展开详细信息
+                row.classList.add('expanded');
+                element.classList.add('expanded');
+                if (descriptionContent) {
+                    descriptionContent.style.display = 'block';
+                }
             }
         }
         
