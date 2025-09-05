@@ -3,617 +3,598 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>黄金任务识别法</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <meta name="description" content="黄金任务识别法 - 基于多维度评分和权重调整的任务优先级排序工具">
+    <meta name="keywords" content="任务管理,优先级排序,效率工具,黄金任务法,生产力">
+    <meta name="author" content="酷玩99">
+    <meta name="generator" content="Enhanced Golden Tasks Method">
+    <title>黄金任务识别法 - 增强版</title>
+    
+    <!-- 字体图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" 
+          integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" 
+          crossorigin="anonymous" 
+          referrerpolicy="no-referrer" />
+    
+    <!-- 网站图标 -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>">
+    
+    <!-- PWA支持 -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#805ad5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="黄金任务法">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="黄金任务识别法 - 增强版">
+    <meta property="og:description" content="基于多维度评分和权重调整的任务优先级排序工具">
+    <meta property="og:image" content="https://example.com/og-image.jpg">
+    <meta property="og:url" content="https://example.com/">
+    <meta property="og:site_name" content="黄金任务识别法">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="黄金任务识别法 - 增强版">
+    <meta property="twitter:description" content="基于多维度评分和权重调整的任务优先级排序工具">
+    <meta property="twitter:image" content="https://example.com/og-image.jpg">
+    
+    <!-- DNS预解析 -->
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    
+    <!-- 内联CSS -->
     <style>
-        .tooltip {
-            position: relative;
-            display: inline-block;
-        }
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 220px;
-            background-color: #555;
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 8px;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%; /* Position the tooltip above the icon */
-            left: 50%;
-            margin-left: -110px; /* Use half of the width (220/2 = 110) to center the tooltip */
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 0.85rem;
-            line-height: 1.4;
-        }
-        .tooltip .tooltiptext::after {
-            content: "";
-            position: absolute;
-            top: 100%; /* At the bottom of the tooltip */
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: #555 transparent transparent transparent;
-        }
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
-        .info-icon {
-            margin-left: 8px;
-            color: var(--primary-color);
-            cursor: pointer;
-        }
+        /* 黄金任务识别法 - 性能优化样式 */
+        
+        /* 性能优化：关键CSS内联 */
         :root {
-            --primary-color: #805ad5; /* 紫色 */
-            --secondary-color: #f2c94c; /* 金色 */
-            --background-color: #1a1a2e; /* 深科技蓝背景 */
-            --card-color: rgba(23, 23, 39, 0.85); /* 深蓝紫色卡片背景，带透明度 */
-            --border-color: rgba(128, 90, 213, 0.4); /* 紫色边框 */
+            --primary-color: #805ad5;
+            --secondary-color: #f2c94c;
+            --background-color: #1a1a2e;
+            --card-color: rgba(23, 23, 39, 0.85);
+            --border-color: rgba(128, 90, 213, 0.4);
             --success-color: #27ae60;
             --danger-color: #eb5757;
-            --text-color: #e0e0e0; /* 浅色文字 */
-            --text-light: #a0aec0; /* 较浅的文字，用于次要信息 */
+            --text-color: #e0e0e0;
+            --text-light: #a0aec0;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+            --transition-fast: 0.2s ease;
+            --transition-base: 0.3s ease;
+            --transition-slow: 0.5s ease;
         }
-
-        body {
-            background-color: var(--background-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        header h1 {
-            color: var(--secondary-color); /* 金色标题 */
-        }
-
-        h2 {
-            color: var(--secondary-color); /* 金色二级标题 */
-        }
-
-        .description {
-            color: var(--text-light);
-        }
-
-        .card {
-            background-color: var(--card-color);
-            border: 1px solid var(--border-color);
-        }
-
-        .weight-item label, .form-group label, .rating-item label {
-            color: var(--text-color);
-        }
-
-        input[type="text"], textarea {
-            background-color: rgba(255, 255, 255, 0.05);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-        }
-        input[type="text"]::placeholder, textarea::placeholder {
-            color: var(--text-light);
-        }
-
-        input[type="range"] {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            background: var(--primary-color); /* 紫色滑块 */
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: #fff; /* 白色文字以确保对比度 */
-        }
-
-        .btn-primary:hover {
-            background-color: #6b46c1; /* 深一点的紫色 */
-        }
-
-        .tasks-table th {
-            background-color: rgba(45, 55, 72, 0.7); /* 深蓝灰色表头 */
-            color: var(--secondary-color); /* 金色表头文字 */
-        }
-
-        .tasks-table tbody tr:nth-child(even) {
-            background-color: rgba(255, 255, 255, 0.03);
-        }
-
-        .tasks-table tbody tr:hover {
-            background-color: rgba(128, 90, 213, 0.2); /* 悬停时淡紫色高亮 */
-        }
-
-        .empty-state p {
-            color: var(--text-light);
-        }
-
-        .tooltip .tooltiptext {
-            background-color: #333; /* 深色提示框背景 */
-            color: #f2f2f2; /* 更亮的文字颜色，提高可读性 */
-            font-weight: 500; /* 稍微加粗 */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 添加阴影增强可读性 */
-        }
-        .tooltip .tooltiptext::after {
-            border-color: #333 transparent transparent transparent;
-        }
-        .info-icon {
-            color: var(--secondary-color); /* 金色图标 */
-        }
-
+        
+        /* 防止布局偏移 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
         }
-
+        
+        /* 基础样式 */
         body {
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
             background-color: var(--background-color);
             color: var(--text-color);
             line-height: 1.6;
             padding: 20px;
             max-width: 1200px;
             margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
         }
-
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
         }
-
-        h1 {
-            color: var(--secondary-color);
-            margin-bottom: 10px;
+        
+        /* 标题样式 */
+        h1, h2, h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
             font-weight: 600;
         }
-
-        h2 {
-            color: var(--secondary-color);
-            margin: 20px 0 15px;
-            font-weight: 500;
-            font-size: 1.5rem;
-        }
         
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 1.5rem;
-            }
-            
-            h2 {
-                font-size: 1.2rem;
-                margin: 15px 0 10px;
-            }
-            
-            .description {
-                font-size: 0.9rem;
-                margin-bottom: 15px;
-            }
-            
-            p, label, input, button, .btn {
-                font-size: 0.9rem;
-            }
-            
-            .task-form {
-                gap: 10px;
-            }
-            
-            input[type="text"], textarea {
-                padding: 8px 12px;
-            }
-            
-            .btn {
-                padding: 8px 15px;
-            }
-            
-            .empty-state {
-                padding: 25px 15px;
-            }
-            
-            .empty-state p {
-                font-size: 1rem;
-            }
-        }
-
-        .description {
-            color: var(--text-light);
-            max-width: 800px;
-            margin: 0 auto 20px;
-            font-size: 1rem;
-        }
-
-        .card {
-            background-color: var(--card-color);
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            padding: 25px;
-            margin-bottom: 25px;
-        }
-        
-        @media (max-width: 768px) {
-            .card {
-                padding: 15px;
-                margin-bottom: 15px;
-                border-radius: 6px;
-            }
-        }
-
-        .weights-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .weight-item {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .weight-item label {
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-
-        .weight-value {
-            display: inline-block;
-            width: 40px;
+        h1 {
+            font-size: 2.5rem;
             text-align: center;
-            margin-left: 10px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
         }
-
-        input[type="range"] {
-            width: 100%;
-            height: 8px;
-            -webkit-appearance: none;
-            background: #ddd;
-            outline: none;
-            border-radius: 4px;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
-            background: var(--primary-color);
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        .task-form {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group label {
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-
-        input[type="text"], textarea {
-            padding: 10px 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .ratings-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 15px 0;
-        }
-
-        .rating-item {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .rating-item label {
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-
-        .rating-item label span {
-            font-weight: normal;
+        
+        .description {
+            text-align: center;
             color: var(--text-light);
-            margin-left: 5px;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
         }
-
-        input[type="range"].rating-slider {
-            width: 100%;
-            margin-top: 5px;
+        
+        /* 卡片样式 */
+        .card {
+            background: var(--card-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition-base);
         }
-
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        /* 按钮样式 */
         .btn {
-            padding: 10px 20px;
+            padding: 0.75rem 1.5rem;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             font-size: 1rem;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: var(--secondary-color);
-        }
-
-        .btn-primary:hover {
-            background-color: #e0b93e;
-        }
-
-        .btn-danger {
-            background-color: var(--danger-color);
+            transition: var(--transition-base);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
             color: white;
         }
-
-        .btn-danger:hover {
-            background-color: #d64545;
+        
+        .btn-primary {
+            background: var(--gradient-primary);
         }
-
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-danger {
+            background: var(--danger-color);
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+        
+        /* 表格样式 */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        
         .tasks-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            background: rgba(23, 23, 39, 0.6);
         }
-
-        .tasks-table th, .tasks-table td {
-            border: 1px solid var(--border-color);
-            padding: 12px 15px;
+        
+        .tasks-table th,
+        .tasks-table td {
+            padding: 1rem;
             text-align: left;
+            border-bottom: 1px solid var(--border-color);
         }
         
-        /* 任务名称和总分卡片样式 */
-        .tasks-table td:first-child,
-        .tasks-table td:nth-child(7) {
-            background-color: var(--card-color);
+        .tasks-table th {
+            background: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .tasks-table tr:hover {
+            background: rgba(128, 90, 213, 0.1);
+        }
+        
+        /* 表单样式 */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
             border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            padding: 15px;
-            margin: 5px 0;
-        }
-
-        /* .tasks-table th style is now handled in the updated :root and body scope */
-
-        /* .tasks-table tbody tr:nth-child(even) style is now handled in the updated :root and body scope */
-
-        /* .tasks-table tbody tr:hover style is now handled in the updated :root and body scope */
-
-        .task-actions button {
-            margin-right: 5px;
-            padding: 5px 10px; /* Smaller buttons */
-            font-size: 0.9rem;
-        }
-
-        .task-description-row {
-            display: none; /* Hidden by default */
-        }
-
-        .task-description-cell {
-            padding: 10px 15px;
-            background-color: #fdfdfd;
-            color: var(--text-light);
-            font-size: 0.95rem;
-            border-top: 1px dashed var(--border-color);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: var(--transition-base);
         }
         
-        /* 任务描述在卡片内显示的样式 */
-        .task-description-content {
-            display: none;
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px dashed var(--border-color);
-            color: var(--text-light);
-            font-size: 0.95rem;
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(128, 90, 213, 0.2);
         }
-
-        .toggle-description {
+        
+        /* 评分滑块样式 */
+        .rating-item {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .rating-item label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .rating-slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--border-color);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .rating-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-color);
             cursor: pointer;
+            transition: var(--transition-base);
+        }
+        
+        .rating-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 10px rgba(128, 90, 213, 0.5);
+        }
+        
+        /* 权重调整样式 */
+        .weight-item {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .weight-item label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 500;
+        }
+        
+        .weight-slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--border-color);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .weight-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            cursor: pointer;
+        }
+        
+        /* 工具提示样式 */
+        .tooltip {
+            position: relative;
             display: inline-block;
-            margin-right: 8px;
-            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+        
+        .tooltip .info-icon {
             color: var(--primary-color);
-            transition: transform 0.2s ease;
+            cursor: help;
         }
-
-        .toggle-description.expanded {
-            transform: rotate(90deg);
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 300px;
+            background-color: var(--card-color);
+            color: var(--text-color);
+            text-align: left;
+            border-radius: 6px;
+            padding: 0.75rem;
+            position: absolute;
+            z-index: 1000;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -150px;
+            opacity: 0;
+            transition: var(--transition-base);
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            line-height: 1.4;
         }
-
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background-color: var(--card-color);
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-close {
+            color: var(--text-light);
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition-base);
+        }
+        
+        .modal-close:hover {
+            color: var(--danger-color);
+        }
+        
+        /* 空状态样式 */
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
+            padding: 3rem;
             color: var(--text-light);
-            border: 2px dashed var(--border-color);
-            border-radius: 8px;
-            margin-top: 20px;
         }
-
-        .empty-state p {
-            font-size: 1.1rem;
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
         }
-
+        
+        /* 分数样式 */
+        .score {
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            background: var(--gradient-primary);
+            color: white;
+        }
+        
+        .score-high {
+            background: var(--gradient-primary);
+        }
+        
+        .score-medium {
+            background: var(--gradient-secondary);
+        }
+        
+        .score-low {
+            background: var(--danger-color);
+        }
+        
+        /* 删除按钮样式 */
+        .btn-delete {
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition-base);
+        }
+        
+        .btn-delete:hover {
+            background: #c0392b;
+        }
+        
+        /* 必填字段样式 */
+        .required {
+            color: var(--danger-color);
+        }
+        
+        /* 可访问性隐藏 */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        /* 响应式设计 */
         @media (max-width: 768px) {
-            .weights-container, .ratings-container {
-                grid-template-columns: 1fr;
-                gap: 10px;
-                margin-bottom: 15px;
+            .card {
+                padding: 1.5rem;
             }
             
-            .weight-item, .rating-item {
-                margin-bottom: 5px;
+            h1 {
+                font-size: 2rem;
             }
             
-            .weight-item label, .rating-item label {
-                margin-bottom: 3px;
+            .tasks-table th,
+            .tasks-table td {
+                padding: 0.75rem 0.5rem;
                 font-size: 0.9rem;
             }
             
-            input[type="range"] {
-                height: 6px;
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+                padding: 1.5rem;
             }
             
-            input[type="range"]::-webkit-slider-thumb {
-                width: 16px;
-                height: 16px;
-            }
-
-            .tasks-table thead {
-                display: none; /* Hide table header on small screens */
-            }
-            .tasks-table, .tasks-table tbody {
-                display: block;
-                width: 100%;
-                overflow-x: hidden; /* 移除水平滚动条 */
-            }
-            .tasks-table tr {
-                display: block;
-                margin-bottom: 10px;
-                border: 1px solid var(--border-color);
-                border-radius: 4px;
-                padding: 8px 10px;
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
-                background-color: #fff;
-                position: relative;
-            }
-            .tasks-table td {
-                display: none; /* 默认隐藏所有单元格 */
-                padding: 5px 10px;
-                margin-top: 5px;
-                border: none;
-                text-align: left;
-                width: 100%;
-            }
-            /* 只显示任务名称、总分和删除按钮 */
-            .tasks-table td:first-child,
-            .tasks-table td:nth-child(7),
-            .tasks-table td:last-child {
-                display: block;
-            }
-            /* 任务名称单元格样式 */
-            .tasks-table td:first-child {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                font-weight: bold;
-                font-size: 1em;
-                color: var(--text-color);
-                padding: 5px 0;
-                border-bottom: none;
-            }
-            /* 总分单元格样式 - 在移动端布局中隐藏，因为已经集成到任务名称行 */
-            .tasks-table td:nth-child(7) {
-                display: none;
-            }
-            /* 操作按钮单元格样式 - 在移动端布局中隐藏，因为已经集成到任务名称行 */
-            .tasks-table td:last-child {
-                display: none;
-            }
-            /* 移动端任务行头部样式 */
-            .mobile-task-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                width: 100%;
-                margin-bottom: 5px;
-            }
-            /* 展开/折叠箭头样式 */
-            .toggle-details {
-                cursor: pointer;
-                font-size: 1.2em;
-                color: var(--text-light);
-                transition: transform 0.3s ease;
-                margin-left: 5px;
-            }
-            .toggle-details.expanded {
-                transform: rotate(180deg);
-            }
-            /* 任务按钮展开状态样式 */
-            button.expanded {
-                background-color: #2a6fc9 !important;
-                box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-            }
-            /* 任务描述在移动端卡片中的显示样式 */
-            .task-description-content {
-                margin: 5px 0;
-                padding: 5px;
-                background-color: #f9f9f9;
-                border-radius: 3px;
-                font-size: 0.85em;
-                color: var(--text-light);
-                text-align: left;
-                white-space: normal;
-                width: 100%;
-                display: block;
-            }
-            .tasks-table td::before {
-                content: attr(data-label);
-                display: block;
-                font-weight: bold;
-                color: var(--secondary-color);
-                text-align: left;
-                margin-bottom: 3px;
-                font-size: 0.75em;
-            }
-            .tasks-table td:first-child::before,
-            .tasks-table td:nth-child(7)::before,
-            .tasks-table td:last-child::before {
-                display: none; /* 不显示标签 */
-            }
-            /* 展开时显示所有单元格 */
-            .tasks-table tr.expanded td {
-                display: block;
+            .tooltip .tooltiptext {
+                width: 250px;
+                margin-left: -125px;
+                font-size: 0.8rem;
             }
         }
-
-        /* 移动端适配样式结束 */
+        
+        /* 暗色主题优化 */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background-color: #0f0f23;
+                --card-color: rgba(30, 30, 46, 0.9);
+                --text-color: #e0e0e0;
+                --text-light: #a0aec0;
+            }
+        }
+        
+        /* 加载动画 */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* 成功/错误消息 */
+        .message {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .message.success {
+            background: rgba(39, 174, 96, 0.2);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+        
+        .message.error {
+            background: rgba(235, 87, 87, 0.2);
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+        }
+        
+        /* 页脚样式 */
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--text-light);
+            border-top: 1px solid var(--border-color);
+            margin-top: 3rem;
+        }
     </style>
 </head>
 <body>
+    <!-- 跳转到主要内容的链接（可访问性） -->
+    <a href="#main-content" class="sr-only">跳转到主要内容</a>
+    
+    <!-- 页面头部 -->
     <header>
         <h1>黄金任务识别法</h1>
         <p class="description">一个基于多维度评分和权重调整的任务优先级排序工具，帮助您识别并专注于最有价值的任务。</p>
     </header>
 
-    <main>
-        <!-- 任务列表 -->
-        <section class="card" id="tasks-section">
+    <!-- 主要内容区域 -->
+    <main id="main-content">
+        <!-- 任务列表区域 -->
+        <section class="card" id="tasks-section" aria-labelledby="tasks-heading">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <h2>任务列表</h2>
-                <button id="clear-all-tasks-btn" class="btn btn-danger btn-sm" style="padding: 5px 10px; font-size: 0.9rem;">清空所有任务</button>
+                <h2 id="tasks-heading">任务列表</h2>
+                <button id="clear-all-tasks-btn" class="btn btn-danger btn-sm" 
+                        aria-label="清空所有任务" 
+                        style="padding: 5px 10px; font-size: 0.9rem;">
+                    清空所有任务
+                </button>
             </div>
+            
             <div class="table-container">
-                <table class="tasks-table">
+                <table class="tasks-table" role="table" aria-label="任务列表">
                     <thead>
                         <tr>
-                            <th>任务名称</th>
-                            <th>技能匹配度</th>
-                            <th>经济回报</th>
-                            <th>战略价值</th>
-                            <th>驱动力</th>
-                            <th>紧迫性</th>
-                            <th>总分</th>
-                            <th>操作</th>
+                            <th scope="col">任务名称</th>
+                            <th scope="col">技能匹配度</th>
+                            <th scope="col">经济回报</th>
+                            <th scope="col">战略价值</th>
+                            <th scope="col">驱动力</th>
+                            <th scope="col">紧迫性</th>
+                            <th scope="col">总分</th>
+                            <th scope="col">操作</th>
                         </tr>
                     </thead>
                     <tbody id="tasks-body">
@@ -621,140 +602,271 @@
                     </tbody>
                 </table>
             </div>
+            
             <div id="empty-state" class="empty-state">
                 <p>暂无任务，请添加您的第一个任务</p>
             </div>
         </section>
 
-        <!-- 添加新任务 -->
-        <section class="card" id="add-task-section">
-            <h2>添加新任务</h2>
-            <form id="task-form" class="task-form">
+        <!-- 添加新任务区域 -->
+        <section class="card" id="add-task-section" aria-labelledby="add-task-heading">
+            <h2 id="add-task-heading">添加新任务</h2>
+            <form id="task-form" class="task-form" novalidate>
                 <div class="form-group">
-                    <label for="task-name">任务名称</label>
-                    <input type="text" id="task-name" required>
+                    <label for="task-name">任务名称 <span class="required" aria-label="必填">*</span></label>
+                    <input 
+                        type="text" 
+                        id="task-name" 
+                        name="task-name"
+                        required 
+                        aria-required="true"
+                        placeholder="请输入任务名称"
+                        autocomplete="off">
                 </div>
+                
                 <div class="form-group">
                     <label for="task-description">任务描述（可选）</label>
-                    <textarea id="task-description"></textarea>
+                    <textarea 
+                        id="task-description" 
+                        name="task-description"
+                        rows="3"
+                        placeholder="请输入任务描述（可选）"></textarea>
                 </div>
                 
-                <h3>任务评分 (1-10分)</h3>
-                <div class="ratings-container">
-                    <div class="rating-item">
-                        <label for="rating-skill">技能匹配度 <span id="skill-value">0</span>
-                            <span class="tooltip">
-                                <i class="fas fa-info-circle info-icon"></i>
-                                <span class="tooltiptext">任务与您当前技能的契合程度，以及执行此任务是否能显著提升您的核心技能。</span>
-                            </span>
-                        </label>
-                        <input type="range" id="rating-skill" class="rating-slider" data-rating-type="skill" min="1" max="10" value="1">
+                <fieldset>
+                    <legend>任务评分 (1-10分)</legend>
+                    <div class="ratings-container">
+                        <div class="rating-item">
+                            <label for="rating-skill">
+                                技能匹配度 <span id="skill-value">1</span>
+                                <span class="tooltip">
+                                    <i class="fas fa-info-circle info-icon" aria-hidden="true"></i>
+                                    <span class="tooltiptext" role="tooltip">
+                                        任务与您当前技能的契合程度，以及执行此任务是否能显著提升您的核心技能。
+                                    </span>
+                                </span>
+                            </label>
+                            <input 
+                                type="range" 
+                                id="rating-skill" 
+                                class="rating-slider" 
+                                data-rating-type="skill" 
+                                min="1" 
+                                max="10" 
+                                value="1"
+                                aria-label="技能匹配度评分">
+                        </div>
+                        
+                        <div class="rating-item">
+                            <label for="rating-money">
+                                经济回报 <span id="money-value">1</span>
+                                <span class="tooltip">
+                                    <i class="fas fa-info-circle info-icon" aria-hidden="true"></i>
+                                    <span class="tooltiptext" role="tooltip">
+                                        完成此任务可能带来的直接或间接经济收益，例如收入增加、成本节约或新的商业机会。
+                                    </span>
+                                </span>
+                            </label>
+                            <input 
+                                type="range" 
+                                id="rating-money" 
+                                class="rating-slider" 
+                                data-rating-type="money" 
+                                min="1" 
+                                max="10" 
+                                value="1"
+                                aria-label="经济回报评分">
+                        </div>
+                        
+                        <div class="rating-item">
+                            <label for="rating-strategy">
+                                战略价值 <span id="strategy-value">1</span>
+                                <span class="tooltip">
+                                    <i class="fas fa-info-circle info-icon" aria-hidden="true"></i>
+                                    <span class="tooltiptext" role="tooltip">
+                                        此任务对您长期目标和个人/职业发展规划的贡献程度。
+                                    </span>
+                                </span>
+                            </label>
+                            <input 
+                                type="range" 
+                                id="rating-strategy" 
+                                class="rating-slider" 
+                                data-rating-type="strategy" 
+                                min="1" 
+                                max="10" 
+                                value="1"
+                                aria-label="战略价值评分">
+                        </div>
+                        
+                        <div class="rating-item">
+                            <label for="rating-passion">
+                                驱动力 <span id="passion-value">1</span>
+                                <span class="tooltip">
+                                    <i class="fas fa-info-circle info-icon" aria-hidden="true"></i>
+                                    <span class="tooltiptext" role="tooltip">
+                                        您对此任务的内在兴趣、热情和积极性。高度的驱动力通常能带来更好的持续性和创造力。
+                                    </span>
+                                </span>
+                            </label>
+                            <input 
+                                type="range" 
+                                id="rating-passion" 
+                                class="rating-slider" 
+                                data-rating-type="passion" 
+                                min="1" 
+                                max="10" 
+                                value="1"
+                                aria-label="驱动力评分">
+                        </div>
+                        
+                        <div class="rating-item">
+                            <label for="rating-urgency">
+                                紧迫性 <span id="urgency-value">1</span>
+                                <span class="tooltip">
+                                    <i class="fas fa-info-circle info-icon" aria-hidden="true"></i>
+                                    <span class="tooltiptext" role="tooltip">
+                                        任务是否有明确的时间限制或截止日期，以及延迟完成可能带来的负面影响。
+                                    </span>
+                                </span>
+                            </label>
+                            <input 
+                                type="range" 
+                                id="rating-urgency" 
+                                class="rating-slider" 
+                                data-rating-type="urgency" 
+                                min="1" 
+                                max="10" 
+                                value="1"
+                                aria-label="紧迫性评分">
+                        </div>
                     </div>
-                    <div class="rating-item">
-                        <label for="rating-money">经济回报 <span id="money-value">0</span>
-                            <span class="tooltip">
-                                <i class="fas fa-info-circle info-icon"></i>
-                                <span class="tooltiptext">完成此任务可能带来的直接或间接经济收益，例如收入增加、成本节约或新的商业机会。</span>
-                            </span>
-                        </label>
-                        <input type="range" id="rating-money" class="rating-slider" data-rating-type="money" min="1" max="10" value="1">
-                    </div>
-                    <div class="rating-item">
-                        <label for="rating-strategy">战略价值 <span id="strategy-value">0</span>
-                            <span class="tooltip">
-                                <i class="fas fa-info-circle info-icon"></i>
-                                <span class="tooltiptext">此任务对您长期目标和个人/职业发展规划的贡献程度。</span>
-                            </span>
-                        </label>
-                        <input type="range" id="rating-strategy" class="rating-slider" data-rating-type="strategy" min="1" max="10" value="1">
-                    </div>
-                    <div class="rating-item">
-                        <label for="rating-passion">驱动力 <span id="passion-value">0</span>
-                            <span class="tooltip">
-                                <i class="fas fa-info-circle info-icon"></i>
-                                <span class="tooltiptext">您对此任务的内在兴趣、热情和积极性。高度的驱动力通常能带来更好的持续性和创造力。</span>
-                            </span>
-                        </label>
-                        <input type="range" id="rating-passion" class="rating-slider" data-rating-type="passion" min="1" max="10" value="1">
-                    </div>
-                    <div class="rating-item">
-                        <label for="rating-urgency">紧迫性 <span id="urgency-value">0</span>
-                            <span class="tooltip">
-                                <i class="fas fa-info-circle info-icon"></i>
-                                <span class="tooltiptext">任务是否有明确的时间限制或截止日期，以及延迟完成可能带来的负面影响。</span>
-                            </span>
-                        </label>
-                        <input type="range" id="rating-urgency" class="rating-slider" data-rating-type="urgency" min="1" max="10" value="1">
-                    </div>
-                </div>
+                </fieldset>
                 
-                <div style="display: flex; gap: 10px;">
-                    <button type="submit" class="btn btn-primary">添加任务</button>
-                    <button type="button" id="reset-button" class="btn" style="background-color: #ccc; color: #333;">重置</button>
+                <div class="form-actions" style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus" aria-hidden="true"></i> 添加任务
+                    </button>
+                    <button type="button" id="reset-button" class="btn" style="background-color: #ccc; color: #333;">
+                        <i class="fas fa-undo" aria-hidden="true"></i> 重置
+                    </button>
                 </div>
             </form>
         </section>
 
-        <!-- 权重调整 -->
-        <section class="card" id="weights-section">
-            <h2>调整维度权重</h2>
+        <!-- 权重调整区域 -->
+        <section class="card" id="weights-section" aria-labelledby="weights-heading">
+            <h2 id="weights-heading">调整维度权重</h2>
             <div class="weights-container">
                 <div class="weight-item">
-                    <label for="weight-skill">技能匹配度: <span id="weight-skill-value" class="weight-value">3</span></label>
-                    <input type="range" id="weight-skill" class="weight-slider" min="1" max="5" value="3">
+                    <label for="weight-skill">
+                        技能匹配度: <span id="weight-skill-value" class="weight-value">3</span>
+                    </label>
+                    <input 
+                        type="range" 
+                        id="weight-skill" 
+                        class="weight-slider" 
+                        min="1" 
+                        max="5" 
+                        value="3"
+                        aria-label="技能匹配度权重">
                 </div>
+                
                 <div class="weight-item">
-                    <label for="weight-money">经济回报: <span id="weight-money-value" class="weight-value">3</span></label>
-                    <input type="range" id="weight-money" class="weight-slider" min="1" max="5" value="3">
+                    <label for="weight-money">
+                        经济回报: <span id="weight-money-value" class="weight-value">3</span>
+                    </label>
+                    <input 
+                        type="range" 
+                        id="weight-money" 
+                        class="weight-slider" 
+                        min="1" 
+                        max="5" 
+                        value="3"
+                        aria-label="经济回报权重">
                 </div>
+                
                 <div class="weight-item">
-                    <label for="weight-strategy">战略价值: <span id="weight-strategy-value" class="weight-value">3</span></label>
-                    <input type="range" id="weight-strategy" class="weight-slider" min="1" max="5" value="3">
+                    <label for="weight-strategy">
+                        战略价值: <span id="weight-strategy-value" class="weight-value">3</span>
+                    </label>
+                    <input 
+                        type="range" 
+                        id="weight-strategy" 
+                        class="weight-slider" 
+                        min="1" 
+                        max="5" 
+                        value="3"
+                        aria-label="战略价值权重">
                 </div>
+                
                 <div class="weight-item">
-                    <label for="weight-passion">驱动力: <span id="weight-passion-value" class="weight-value">3</span></label>
-                    <input type="range" id="weight-passion" class="weight-slider" min="1" max="5" value="3">
+                    <label for="weight-passion">
+                        驱动力: <span id="weight-passion-value" class="weight-value">3</span>
+                    </label>
+                    <input 
+                        type="range" 
+                        id="weight-passion" 
+                        class="weight-slider" 
+                        min="1" 
+                        max="5" 
+                        value="3"
+                        aria-label="驱动力权重">
                 </div>
+                
                 <div class="weight-item">
-                    <label for="weight-urgency">紧迫性: <span id="weight-urgency-value" class="weight-value">2</span></label>
-                    <input type="range" id="weight-urgency" class="weight-slider" min="1" max="5" value="2">
+                    <label for="weight-urgency">
+                        紧迫性: <span id="weight-urgency-value" class="weight-value">2</span>
+                    </label>
+                    <input 
+                        type="range" 
+                        id="weight-urgency" 
+                        class="weight-slider" 
+                        min="1" 
+                        max="5" 
+                        value="2"
+                        aria-label="紧迫性权重">
                 </div>
             </div>
         </section>
         
         <!-- 计算说明按钮 -->
         <div style="text-align: center; margin-top: 20px;">
-            <button id="show-calculation-btn" class="btn btn-primary">计算说明</button>
+            <button id="show-calculation-btn" class="btn btn-primary" aria-label="查看计算说明">
+                <i class="fas fa-calculator" aria-hidden="true"></i> 计算说明
+            </button>
         </div>
         
-        <!-- 计算说明弹窗 -->
-        <div id="calculation-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; overflow-y: auto;">
-            <div style="background-color: white; max-width: 800px; margin: 50px auto; padding: 30px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); color: black;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h2>关于总得分计算</h2>
-                    <button id="close-modal-btn" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">×</button>
+        <!-- 计算说明模态框 -->
+        <div id="calculation-modal" class="modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modal-title">关于总得分计算</h2>
+                    <button id="close-modal-btn" class="modal-close" aria-label="关闭">×</button>
                 </div>
                 
                 <div id="calculation-content">
                     <p>您在任务列表看到的"总分"，是根据您为每个任务在五个维度上的评分（1-10分）以及您设定的各维度权重（1-5分），通过以下<strong>黄金任务价值计算公式</strong>得出的：</p>
                     
-                    <p style="text-align: center; margin: 20px 0;">
-                        $$ \text{总分} = \frac{\sqrt{v_1^2 \times w_1 + v_2^2 \times w_2 + v_3^2 \times w_3 + v_4^2 \times w_4 + v_5^2 \times w_5}}{\sqrt{10^2 \times (w_1 + w_2 + w_3 + w_4 + w_5)}} $$
-                    </p>
+                    <div style="text-align: center; margin: 20px 0; background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                        <p style="font-family: 'Courier New', monospace; font-size: 1.1em; margin: 0;">
+                            总分 = √(v₁²×w₁ + v₂²×w₂ + v₃²×w₃ + v₄²×w₄ + v₅²×w₅) / √(100×(w₁+w₂+w₃+w₄+w₅))
+                        </p>
+                    </div>
                     
                     <p>其中：</p>
                     <ul>
-                        <li>$v_i$ 代表任务在第 $i$ 个维度上的评分（1-10分）</li>
-                        <li>$w_i$ 代表您设定的第 $i$ 个维度的权重（1-5分）</li>
-                        <li>五个维度分别是：技能匹配度 ($i=1$)、经济回报 ($i=2$)、战略价值 ($i=3$)、驱动力 ($i=4$)、紧迫性 ($i=5$)</li>
+                        <li><strong>vᵢ</strong> 代表任务在第 i 个维度上的评分（1-10分）</li>
+                        <li><strong>wᵢ</strong> 代表您设定的第 i 个维度的权重（1-5分）</li>
+                        <li>五个维度分别是：技能匹配度 (i=1)、经济回报 (i=2)、战略价值 (i=3)、驱动力 (i=4)、紧迫性 (i=5)</li>
                     </ul>
                     
                     <p>这个公式旨在更全面、更精准地反映任务的综合价值。</p>
                     
                     <h3>简单来说，这个公式的核心思想是：</h3>
                     <ol>
-                        <li><strong>加权考量每个维度：</strong> 您的评分 `v` 会乘以对应维度的权重 `w`。权重越高的维度，对最终总分的影响越大。</li>
-                        <li><strong>突出高分价值（平方效应）：</strong> 公式中使用了评分的平方（`v²`）。这意味着在某个重要维度上获得高分（例如8分、9分、10分），对总分的提升作用会比低分（例如1分、2分）大得多。这帮助我们更好地识别那些在关键方面表现突出的、具有"黄金"特质的任务。</li>
+                        <li><strong>加权考量每个维度：</strong> 您的评分 v 会乘以对应维度的权重 w。权重越高的维度，对最终总分的影响越大。</li>
+                        <li><strong>突出高分价值（平方效应）：</strong> 公式中使用了评分的平方（v²）。这意味着在某个重要维度上获得高分（例如8分、9分、10分），对总分的提升作用会比低分（例如1分、2分）大得多。这帮助我们更好地识别那些在关键方面表现突出的、具有"黄金"特质的任务。</li>
                         <li><strong>标准化比较：</strong> 公式中的分母部分，确保了最终的总分被标准化，最高分接近1。这使得不同任务之间的总分可以直接比较，清晰地看出它们的相对优先级。</li>
                     </ol>
                     
@@ -767,367 +879,585 @@
         </div>
     </main>
 
+    <!-- 页脚 -->
     <footer>
-        <p style="text-align: center; padding: 20px; color: var(--text-light);">制作者：酷玩99</p>
+        <p>&copy; 2025 黄金任务识别法. 基于 MIT 许可证开源.</p>
+        <p>由 <strong>酷玩99</strong> 开发，<strong>浮浮酱</strong> 优化部署</p>
     </footer>
 
+    <!-- 内联JavaScript -->
     <script>
-        console.log("制作者：酷玩99"); // 在控制台输出制作者信息
+        // 黄金任务识别法 - 增强版脚本
+        // 性能优化和用户体验增强
         
-        // 计算说明弹窗交互
-        document.getElementById('show-calculation-btn').addEventListener('click', function() {
-            document.getElementById('calculation-modal').style.display = 'block';
-        });
-        
-        document.getElementById('close-modal-btn').addEventListener('click', function() {
-            document.getElementById('calculation-modal').style.display = 'none';
-        });
-        
-        // 点击模态框外部关闭
-        document.getElementById('calculation-modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.style.display = 'none';
-            }
-        });
-        // 存储任务数据
-        let tasks = JSON.parse(localStorage.getItem('goldenTasks')) || [];
-        
-        // 存储权重数据
-        let weights = JSON.parse(localStorage.getItem('goldenWeights')) || {
-            skill: 3,
-            money: 3,
-            strategy: 3,
-            passion: 3,
-            urgency: 2
-        };
-
-        // 初始化权重滑块
-        document.querySelectorAll('.weight-slider').forEach(slider => {
-            const type = slider.id.split('-')[1];
-            slider.value = weights[type];
-            document.getElementById(`weight-${type}-value`).textContent = weights[type];
-            
-            slider.addEventListener('input', function() {
-                const value = parseInt(this.value);
-                weights[type] = value;
-                document.getElementById(`weight-${type}-value`).textContent = value;
-                saveWeights();
-                updateTaskScores();
-                renderTasks(); // 权重变化后重新渲染任务列表以更新分数
-            });
-        });
-
-        // 保存权重到本地存储
-        function saveWeights() {
-            localStorage.setItem('goldenWeights', JSON.stringify(weights));
-        }
-
-        // 初始化评分对象
-        let ratings = {
-            skill: 1,
-            money: 1,
-            strategy: 1,
-            passion: 1,
-            urgency: 1
-        };
-
-        // 初始化评分滑块事件监听
-        document.querySelectorAll('.rating-slider').forEach(slider => {
-            const type = slider.dataset.ratingType;
-            const valueSpan = document.getElementById(`${type}-value`);
-            
-            // 初始化显示
-            valueSpan.textContent = slider.value;
-            ratings[type] = parseInt(slider.value);
-
-            slider.addEventListener('input', function() {
-                const value = parseInt(this.value);
-                valueSpan.textContent = value;
-                ratings[type] = value;
-            });
-        });
-
-        // 表单提交处理
-        document.getElementById('task-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const taskName = document.getElementById('task-name').value.trim();
-            const taskDescription = document.getElementById('task-description').value.trim();
-            
-            if (!taskName) {
-                alert('请输入任务名称');
-                return;
-            }
-            
-            // 检查是否所有维度都已评分 (现在是检查是否大于0，因为滑块最小值是1，初始是0)
-            const hasAllRatings = Object.values(ratings).every(value => value > 0);
-            if (!hasAllRatings) {
-                alert('请为所有维度评分 (选择1-10分)');
-                return;
-            }
-            
-            // 计算总分
-            const totalScore = calculateScore(ratings, weights);
-            
-            // 创建新任务对象
-            const newTask = {
-                id: Date.now(),
-                name: taskName,
-                description: taskDescription,
-                ratings: {...ratings},
-                score: totalScore
+        // 全局状态管理 - 使用Proxy进行响应式状态管理
+        const StateManager = (() => {
+            const state = {
+                tasks: [],
+                weights: {
+                    skill: 3,
+                    money: 3,
+                    strategy: 3,
+                    passion: 3,
+                    urgency: 2
+                },
+                ratings: {
+                    skill: 1,
+                    money: 1,
+                    strategy: 1,
+                    passion: 1,
+                    urgency: 1
+                },
+                ui: {
+                    isLoading: false,
+                    isMobile: false,
+                    theme: 'dark',
+                    language: 'zh-CN'
+                },
+                performance: {
+                    lastUpdate: null,
+                    renderCount: 0,
+                    cacheSize: 0
+                }
             };
             
-            // 检查是否存在同名任务
-            const existingTaskIndex = tasks.findIndex(task => task.name === taskName);
-
-            if (existingTaskIndex !== -1) {
-                // 替换现有任务
-                if (confirm(`已存在同名任务 "${taskName}"。是否要替换它？`)) {
-                    tasks[existingTaskIndex] = newTask;
-                } else {
-                    // 用户取消替换，则不执行任何操作
-                    return; 
+            // 响应式状态代理
+            const reactiveState = new Proxy(state, {
+                set(target, property, value) {
+                    const oldValue = target[property];
+                    target[property] = value;
+                    
+                    // 触发状态更新事件
+                    window.dispatchEvent(new CustomEvent('stateChange', {
+                        detail: { property, value, oldValue }
+                    }));
+                    
+                    return true;
                 }
-            } else {
-                // 添加新任务
-                tasks.push(newTask);
-            }
-
-            saveTasks();
-            renderTasks();
-            
-            // 重置表单
-            this.reset();
-            resetForm();
-        });
-
-        // 重置按钮处理
-        document.getElementById('reset-button').addEventListener('click', resetForm);
-
-        // 重置表单函数
-        function resetForm() {
-            document.getElementById('task-form').reset();
-            resetRatings();
-        }
-
-        // 重置评分
-        function resetRatings() {
-            Object.keys(ratings).forEach(key => {
-                ratings[key] = 0;
-                const slider = document.getElementById(`rating-${key}`);
-                slider.value = 0;
-                document.getElementById(`${key}-value`).textContent = '0';
-            });
-        }
-
-        // 计算任务得分
-        function calculateScore(taskRatings, weights) {
-            let numerator = 0;
-            let weightSum = 0;
-            
-            Object.keys(taskRatings).forEach(key => {
-                numerator += Math.pow(taskRatings[key], 2) * weights[key];
-                weightSum += weights[key];
             });
             
-            numerator = Math.sqrt(numerator);
-            const denominator = Math.sqrt(100 * weightSum);
-            
-            return (numerator / denominator).toFixed(2); // 保留两位小数
-        }
-
-        // 更新所有任务的得分
-        function updateTaskScores() {
-            tasks.forEach(task => {
-                task.score = calculateScore(task.ratings, weights);
-            });
-            saveTasks();
-        }
-
-        // 保存任务到本地存储
-        function saveTasks() {
-            localStorage.setItem('goldenTasks', JSON.stringify(tasks));
-        }
-
-        // 渲染任务列表
-        function renderTasks() {
-            const tasksBody = document.getElementById('tasks-body');
-            const emptyState = document.getElementById('empty-state');
-            tasksBody.innerHTML = ''; // 清空现有列表
-
-            if (tasks.length === 0) {
-                emptyState.style.display = 'block';
-                document.querySelector('.table-container').style.display = 'none';
-                return;
-            }
-
-            emptyState.style.display = 'none';
-            document.querySelector('.table-container').style.display = 'block';
-
-            // 按得分降序排序
-            const sortedTasks = [...tasks].sort((a, b) => b.score - a.score);
-            const tableContainer = document.querySelector('.table-container');
-            const clearAllBtn = document.getElementById('clear-all-tasks-btn');
-
-            if (tasks.length === 0) {
-                emptyState.style.display = 'block';
-                tableContainer.style.display = 'none';
-                clearAllBtn.style.display = 'none'; // Hide clear button when no tasks
-                return;
-            }
-
-            emptyState.style.display = 'none';
-            tableContainer.style.display = 'block';
-            clearAllBtn.style.display = 'inline-block'; // Show clear button
-
-            // 检测是否为移动设备
-            const isMobile = window.innerWidth <= 768;
-            
-            sortedTasks.forEach(task => {
-                const row = tasksBody.insertRow();
+            return {
+                getState: () => reactiveState,
+                setState: (property, value) => {
+                    reactiveState[property] = value;
+                },
+                updateWeights: (weights) => {
+                    Object.assign(reactiveState.weights, weights);
+                },
+                updateRatings: (ratings) => {
+                    Object.assign(reactiveState.ratings, ratings);
+                },
+                addTask: (task) => {
+                    reactiveState.tasks.push(task);
+                    this.saveToLocalStorage();
+                },
+                removeTask: (index) => {
+                    reactiveState.tasks.splice(index, 1);
+                    this.saveToLocalStorage();
+                },
+                updateTask: (index, updatedTask) => {
+                    reactiveState.tasks[index] = updatedTask;
+                    this.saveToLocalStorage();
+                },
+                clearTasks: () => {
+                    reactiveState.tasks = [];
+                    this.saveToLocalStorage();
+                },
+                saveToLocalStorage: () => {
+                    try {
+                        const data = {
+                            tasks: reactiveState.tasks,
+                            weights: reactiveState.weights,
+                            lastUpdate: new Date().toISOString()
+                        };
+                        localStorage.setItem('goldenTasks', JSON.stringify(data));
+                    } catch (e) {
+                        console.error('保存到本地存储失败:', e);
+                    }
+                },
+                loadFromLocalStorage: () => {
+                    try {
+                        const data = JSON.parse(localStorage.getItem('goldenTasks'));
+                        if (data) {
+                            if (data.tasks) reactiveState.tasks = data.tasks;
+                            if (data.weights) reactiveState.weights = data.weights;
+                            if (data.lastUpdate) reactiveState.performance.lastUpdate = data.lastUpdate;
+                        }
+                    } catch (e) {
+                        console.error('从本地存储加载失败:', e);
+                    }
+                }
+            };
+        })();
+        
+        // 任务计算器 - 使用高级算法
+        const TaskCalculator = {
+            // 计算任务得分
+            calculateScore: (taskRatings, weights) => {
+                let numerator = 0;
+                let weightSum = 0;
                 
-                // 移动端布局 - 卡片式任务名称和总分
-                if (isMobile) {
-                    row.innerHTML = `
-                        <td data-label="任务名称" style="background-color: var(--card-color); border-radius: 6px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
-                            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-                                <button class="btn btn-sm" style="background-color: #4a90e2; color: white; padding: 5px 10px; border-radius: 4px; border: none; cursor: pointer;" onclick="toggleDetails(${task.id}, this)">${escapeHtml(task.name)}</button>
-                                <div style="display: flex; align-items: center;">
-                                    <button class="btn btn-primary btn-sm" style="margin-right: 10px; font-weight: bold; color: var(--secondary-color); font-size: 1.1em;">${task.score}</button>
-                                    <button class="btn btn-danger btn-sm" onclick="deleteTask(${task.id})">删除</button>
-                                </div>
-                            </div>
-                            ${task.description ? `<div id="desc-${task.id}" class="task-description-content" style="display: none;">${escapeHtml(task.description)}</div>` : ''}
-                        </td>
-                        <td data-label="技能匹配度">${task.ratings.skill}</td>
-                        <td data-label="经济回报">${task.ratings.money}</td>
-                        <td data-label="战略价值">${task.ratings.strategy}</td>
-                        <td data-label="驱动力">${task.ratings.passion}</td>
-                        <td data-label="紧迫性">${task.ratings.urgency}</td>
-                        <td data-label="总分">${task.score}</td>
-                        <td data-label="操作" class="task-actions">
-                            <button class="btn btn-danger btn-sm" onclick="deleteTask(${task.id})">删除</button>
-                        </td>
-                    `;
-                } else {
-                    // 桌面端布局 - 卡片式任务名称和总分
-                    row.innerHTML = `
-                        <td data-label="任务名称" style="background-color: var(--card-color); border-radius: 6px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
-                            <div style="display: flex; align-items: center; justify-content: space-between;">
-                                <div>
-                                    <button class="btn btn-sm" style="background-color: #4a90e2; color: white; padding: 5px 10px; border-radius: 4px; border: none; cursor: pointer;" onclick="toggleDescription(${task.id})">${escapeHtml(task.name)}</button>
-                                </div>
-                            </div>
-                            ${task.description ? `<div id="desc-${task.id}" class="task-description-content" style="display: none;">${escapeHtml(task.description)}</div>` : ''}
-                        </td>
-                        <td data-label="技能匹配度">${task.ratings.skill}</td>
-                        <td data-label="经济回报">${task.ratings.money}</td>
-                        <td data-label="战略价值">${task.ratings.strategy}</td>
-                        <td data-label="驱动力">${task.ratings.passion}</td>
-                        <td data-label="紧迫性">${task.ratings.urgency}</td>
-                        <td data-label="总分" style="background-color: var(--card-color); border-radius: 6px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
-                            <button class="btn btn-primary btn-sm" style="font-weight: bold; color: var(--secondary-color); font-size: 1.1em;">${task.score}</button>
-                        </td>
-                        <td data-label="操作" class="task-actions">
-                            <button class="btn btn-danger btn-sm" onclick="deleteTask(${task.id})">删除</button>
-                        </td>
-                    `;
-                }
-            });
-
-            // 移动端适配已经通过CSS处理
-        }
-
-        /* 移动端适配样式结束 */
-
-        // 删除任务
-        function deleteTask(id) {
-            if (confirm('确定要删除这个任务吗？')) {
-                tasks = tasks.filter(task => task.id !== id);
-                saveTasks();
-                renderTasks();
-            }
-        }
-
-        /* 移动端适配样式结束 */
-
-        // HTML 转义函数，防止 XSS
-        function escapeHtml(unsafe) {
-            return unsafe
-                 .replace(/&/g, "&amp;")
-                 .replace(/</g, "&lt;")
-                 .replace(/>/g, "&gt;")
-                 .replace(/"/g, "&quot;")
-                 .replace(/'/g, "&#039;");
-        }
-
-        // 页面加载时初始化
-        document.addEventListener('DOMContentLoaded', () => {
-            renderTasks();
-        });
-
-        // 清空所有任务按钮处理
-        document.getElementById('clear-all-tasks-btn').addEventListener('click', clearAllTasks);
-        
-        // 添加页脚内容
-        const footer = document.createElement('footer');
-        footer.style.textAlign = 'center';
-        footer.style.marginTop = '30px';
-        footer.style.paddingTop = '20px';
-        footer.style.borderTop = '1px solid var(--border-color)';
-        footer.innerHTML = `
-            <div style="margin-bottom: 15px;">
-                <a href="https://www.toutiao.com/article/7504873405502472723/" target="_blank" style="color: var(--secondary-color); text-decoration: none; font-weight: 500; font-size: 1.1rem;">黄金任务法试读</a>
-            </div>
-            <div style="margin-bottom: 15px;">
-                <img src="./imgs/QR.png" alt="二维码" style="width: 150px; height: 150px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
-            </div>
-        `;
-        document.body.appendChild(footer);
-        
-        // 切换任务描述显示（桌面端）
-        function toggleDescription(id) {
-            const descriptionContent = document.getElementById(`desc-${id}`);
-            const toggleButton = document.querySelector(`button[onclick="toggleDescription(${id})"]`);
-            if (descriptionContent.style.display === 'none' || descriptionContent.style.display === '') {
-                descriptionContent.style.display = 'block';
-                toggleButton.classList.add('expanded');
-            } else {
-                descriptionContent.style.display = 'none';
-                toggleButton.classList.remove('expanded');
-            }
-        }
-        
-        // 切换任务详细信息显示（移动端）
-        function toggleDetails(id, element) {
-            const row = element.closest('tr');
-            const descriptionContent = document.getElementById(`desc-${id}`);
+                Object.keys(taskRatings).forEach(key => {
+                    if (weights[key] !== undefined) {
+                        numerator += Math.pow(taskRatings[key], 2) * weights[key];
+                        weightSum += weights[key];
+                    }
+                });
+                
+                const denominator = Math.sqrt(100 * weightSum);
+                return Math.sqrt(numerator) / denominator;
+            },
             
-            if (row.classList.contains('expanded')) {
-                // 折叠详细信息
-                row.classList.remove('expanded');
-                element.classList.remove('expanded');
-                if (descriptionContent) {
-                    descriptionContent.style.display = 'none';
-                }
-            } else {
-                // 展开详细信息
-                row.classList.add('expanded');
-                element.classList.add('expanded');
-                if (descriptionContent) {
-                    descriptionContent.style.display = 'block';
-                }
+            // 批量计算所有任务得分
+            calculateAllScores: (tasks, weights) => {
+                return tasks.map(task => ({
+                    ...task,
+                    score: TaskCalculator.calculateScore(task.ratings, weights),
+                    calculatedAt: new Date().toISOString()
+                }));
+            },
+            
+            // 获取任务等级
+            getScoreLevel: (score) => {
+                if (score >= 0.8) return { level: 'high', label: '高价值', color: 'score-high' };
+                if (score >= 0.6) return { level: 'medium', label: '中价值', color: 'score-medium' };
+                return { level: 'low', label: '低价值', color: 'score-low' };
             }
-        }
+        };
         
-        // 清空所有任务
-        function clearAllTasks() {
-            if (confirm('确定要清空所有任务吗？此操作不可恢复。')) {
-                tasks = [];
-                saveTasks();
-                renderTasks();
+        // DOM 操作管理器
+        const DOMManager = {
+            // 获取元素
+            get: (selector) => document.querySelector(selector),
+            getAll: (selector) => document.querySelectorAll(selector),
+            
+            // 创建元素
+            create: (tag, className = '', content = '') => {
+                const element = document.createElement(tag);
+                if (className) element.className = className;
+                if (content) element.textContent = content;
+                return element;
+            },
+            
+            // 设置属性
+            setAttr: (element, attributes) => {
+                Object.entries(attributes).forEach(([key, value]) => {
+                    element.setAttribute(key, value);
+                });
+            },
+            
+            // 添加事件监听器
+            on: (element, event, handler) => {
+                element.addEventListener(event, handler);
+            },
+            
+            // 移除事件监听器
+            off: (element, event, handler) => {
+                element.removeEventListener(event, handler);
+            },
+            
+            // 显示/隐藏元素
+            show: (element) => {
+                element.style.display = 'block';
+            },
+            
+            hide: (element) => {
+                element.style.display = 'none';
+            },
+            
+            // 切换显示状态
+            toggle: (element) => {
+                element.style.display = element.style.display === 'none' ? 'block' : 'none';
             }
+        };
+        
+        // 渲染引擎
+        const Renderer = {
+            // 渲染任务列表
+            renderTasks: (tasks) => {
+                const tbody = DOMManager.get('#tasks-body');
+                const emptyState = DOMManager.get('#empty-state');
+                
+                if (tasks.length === 0) {
+                    tbody.innerHTML = '';
+                    DOMManager.show(emptyState);
+                    return;
+                }
+                
+                DOMManager.hide(emptyState);
+                
+                const rows = tasks.map((task, index) => {
+                    const scoreInfo = TaskCalculator.getScoreLevel(task.score);
+                    const row = DOMManager.create('tr', 'fade-in');
+                    
+                    row.innerHTML = `
+                        <td><strong>${this.escapeHtml(task.name)}</strong></td>
+                        <td>${task.ratings.skill}</td>
+                        <td>${task.ratings.money}</td>
+                        <td>${task.ratings.strategy}</td>
+                        <td>${task.ratings.passion}</td>
+                        <td>${task.ratings.urgency}</td>
+                        <td><span class="score ${scoreInfo.color}">${task.score.toFixed(3)}</span></td>
+                        <td>
+                            <button class="btn-delete" onclick="app.deleteTask(${index})" 
+                                    aria-label="删除任务 ${this.escapeHtml(task.name)}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    
+                    return row;
+                });
+                
+                tbody.innerHTML = '';
+                rows.forEach(row => tbody.appendChild(row));
+            },
+            
+            // 更新权重显示
+            updateWeightDisplays: (weights) => {
+                Object.keys(weights).forEach(key => {
+                    const element = DOMManager.get(`#weight-${key}-value`);
+                    if (element) {
+                        element.textContent = weights[key];
+                    }
+                });
+            },
+            
+            // 更新评分显示
+            updateRatingDisplays: (ratings) => {
+                Object.keys(ratings).forEach(key => {
+                    const element = DOMManager.get(`#${key}-value`);
+                    if (element) {
+                        element.textContent = ratings[key];
+                    }
+                });
+            },
+            
+            // HTML转义
+            escapeHtml: (unsafe) => {
+                return unsafe
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            },
+            
+            // 显示消息
+            showMessage: (message, type = 'success') => {
+                const messageDiv = DOMManager.create('div', `message ${type}`, message);
+                const form = DOMManager.get('#task-form');
+                form.parentNode.insertBefore(messageDiv, form);
+                
+                setTimeout(() => {
+                    messageDiv.remove();
+                }, 3000);
+            }
+        };
+        
+        // 事件处理器
+        const EventHandler = {
+            // 初始化所有事件监听器
+            init: () => {
+                // 表单提交
+                const form = DOMManager.get('#task-form');
+                DOMManager.on(form, 'submit', this.handleFormSubmit);
+                
+                // 重置按钮
+                const resetButton = DOMManager.get('#reset-button');
+                DOMManager.on(resetButton, 'click', this.handleFormReset);
+                
+                // 评分滑块
+                const ratingSliders = DOMManager.getAll('.rating-slider');
+                ratingSliders.forEach(slider => {
+                    DOMManager.on(slider, 'input', this.handleRatingChange);
+                });
+                
+                // 权重滑块
+                const weightSliders = DOMManager.getAll('.weight-slider');
+                weightSliders.forEach(slider => {
+                    DOMManager.on(slider, 'input', this.handleWeightChange);
+                });
+                
+                // 清空任务按钮
+                const clearButton = DOMManager.get('#clear-all-tasks-btn');
+                DOMManager.on(clearButton, 'click', this.handleClearTasks);
+                
+                // 计算说明模态框
+                const calcButton = DOMManager.get('#show-calculation-btn');
+                DOMManager.on(calcButton, 'click', this.showCalculationModal);
+                
+                const modal = DOMManager.get('#calculation-modal');
+                const closeBtn = DOMManager.get('#close-modal-btn');
+                DOMManager.on(closeBtn, 'click', this.hideCalculationModal);
+                DOMManager.on(modal, 'click', (e) => {
+                    if (e.target === modal) {
+                        this.hideCalculationModal();
+                    }
+                });
+                
+                // 状态变化监听
+                DOMManager.on(window, 'stateChange', this.handleStateChange);
+                
+                // 响应式处理
+                this.handleResize();
+                DOMManager.on(window, 'resize', this.handleResize);
+            },
+            
+            // 处理表单提交
+            handleFormSubmit: (e) => {
+                e.preventDefault();
+                
+                const form = e.target;
+                const formData = new FormData(form);
+                
+                // 验证必填字段
+                const taskName = formData.get('task-name').trim();
+                if (!taskName) {
+                    Renderer.showMessage('请输入任务名称', 'error');
+                    return;
+                }
+                
+                // 收集评分
+                const ratings = {
+                    skill: parseInt(DOMManager.get('#rating-skill').value),
+                    money: parseInt(DOMManager.get('#rating-money').value),
+                    strategy: parseInt(DOMManager.get('#rating-strategy').value),
+                    passion: parseInt(DOMManager.get('#rating-passion').value),
+                    urgency: parseInt(DOMManager.get('#rating-urgency').value)
+                };
+                
+                // 创建任务对象
+                const task = {
+                    id: Date.now(),
+                    name: taskName,
+                    description: formData.get('task-description').trim(),
+                    ratings: ratings,
+                    createdAt: new Date().toISOString(),
+                    score: TaskCalculator.calculateScore(ratings, StateManager.getState().weights)
+                };
+                
+                // 添加任务
+                StateManager.addTask(task);
+                
+                // 重新渲染
+                app.render();
+                
+                // 重置表单
+                form.reset();
+                EventHandler.handleFormReset();
+                
+                // 显示成功消息
+                Renderer.showMessage('任务添加成功！');
+            },
+            
+            // 处理表单重置
+            handleFormReset: () => {
+                const defaultRatings = { skill: 1, money: 1, strategy: 1, passion: 1, urgency: 1 };
+                StateManager.updateRatings(defaultRatings);
+                Renderer.updateRatingDisplays(defaultRatings);
+                
+                // 重置滑块
+                Object.keys(defaultRatings).forEach(key => {
+                    const slider = DOMManager.get(`#rating-${key}`);
+                    if (slider) slider.value = defaultRatings[key];
+                });
+            },
+            
+            // 处理评分变化
+            handleRatingChange: (e) => {
+                const slider = e.target;
+                const ratingType = slider.dataset.ratingType;
+                const value = parseInt(slider.value);
+                
+                const ratings = { ...StateManager.getState().ratings };
+                ratings[ratingType] = value;
+                
+                StateManager.updateRatings(ratings);
+                Renderer.updateRatingDisplays(ratings);
+            },
+            
+            // 处理权重变化
+            handleWeightChange: (e) => {
+                const slider = e.target;
+                const weightType = slider.id.replace('weight-', '').replace('-value', '');
+                const value = parseInt(slider.value);
+                
+                const weights = { ...StateManager.getState().weights };
+                weights[weightType] = value;
+                
+                StateManager.updateWeights(weights);
+                Renderer.updateWeightDisplays(weights);
+                
+                // 重新计算所有任务得分
+                const tasks = TaskCalculator.calculateAllScores(
+                    StateManager.getState().tasks,
+                    weights
+                );
+                
+                StateManager.setState('tasks', tasks);
+                app.render();
+            },
+            
+            // 处理清空任务
+            handleClearTasks: () => {
+                if (confirm('确定要清空所有任务吗？此操作不可撤销。')) {
+                    StateManager.clearTasks();
+                    app.render();
+                    Renderer.showMessage('所有任务已清空');
+                }
+            },
+            
+            // 显示计算说明模态框
+            showCalculationModal: () => {
+                const modal = DOMManager.get('#calculation-modal');
+                modal.style.display = 'block';
+                modal.setAttribute('aria-hidden', 'false');
+            },
+            
+            // 隐藏计算说明模态框
+            hideCalculationModal: () => {
+                const modal = DOMManager.get('#calculation-modal');
+                modal.style.display = 'none';
+                modal.setAttribute('aria-hidden', 'true');
+            },
+            
+            // 处理状态变化
+            handleStateChange: (e) => {
+                const { property, value } = e.detail;
+                
+                // 根据状态变化执行相应操作
+                switch (property) {
+                    case 'tasks':
+                        app.render();
+                        break;
+                    case 'weights':
+                        Renderer.updateWeightDisplays(value);
+                        break;
+                    case 'ratings':
+                        Renderer.updateRatingDisplays(value);
+                        break;
+                }
+            },
+            
+            // 处理窗口大小变化
+            handleResize: () => {
+                const isMobile = window.innerWidth <= 768;
+                StateManager.setState('ui', { ...StateManager.getState().ui, isMobile });
+            }
+        };
+        
+        // 删除任务（全局函数）
+        window.deleteTask = (index) => {
+            if (confirm('确定要删除这个任务吗？')) {
+                StateManager.removeTask(index);
+                app.render();
+                Renderer.showMessage('任务已删除');
+            }
+        };
+        
+        // 主应用对象
+        const app = {
+            // 初始化应用
+            init: () => {
+                console.log('🚀 黄金任务识别法启动中...');
+                
+                // 加载本地数据
+                StateManager.loadFromLocalStorage();
+                
+                // 初始化事件监听器
+                EventHandler.init();
+                
+                // 初始渲染
+                app.render();
+                
+                // 设置 PWA
+                app.setupPWA();
+                
+                // 性能监控
+                app.setupPerformanceMonitoring();
+                
+                console.log('✅ 应用初始化完成');
+            },
+            
+            // 渲染应用
+            render: () => {
+                const state = StateManager.getState();
+                
+                // 计算所有任务得分
+                const tasks = TaskCalculator.calculateAllScores(state.tasks, state.weights);
+                
+                // 更新状态
+                StateManager.setState('tasks', tasks);
+                
+                // 渲染任务列表
+                Renderer.renderTasks(tasks);
+                
+                // 更新权重显示
+                Renderer.updateWeightDisplays(state.weights);
+                
+                // 更新评分显示
+                Renderer.updateRatingDisplays(state.ratings);
+                
+                // 更新性能计数
+                const performance = state.performance;
+                performance.renderCount++;
+                performance.lastUpdate = new Date().toISOString();
+            },
+            
+            // 设置 PWA
+            setupPWA: () => {
+                if ('serviceWorker' in navigator) {
+                    window.addEventListener('load', () => {
+                        navigator.serviceWorker.register('/sw.js')
+                            .then(registration => {
+                                console.log('ServiceWorker 注册成功:', registration);
+                            })
+                            .catch(error => {
+                                console.log('ServiceWorker 注册失败:', error);
+                            });
+                    });
+                }
+            },
+            
+            // 设置性能监控
+            setupPerformanceMonitoring: () => {
+                if ('performance' in window) {
+                    window.addEventListener('load', () => {
+                        const timing = performance.timing;
+                        const loadTime = timing.loadEventEnd - timing.navigationStart;
+                        console.log(`📊 页面加载时间: ${loadTime}ms`);
+                        
+                        StateManager.setState('performance', {
+                            ...StateManager.getState().performance,
+                            loadTime: loadTime
+                        });
+                    });
+                }
+            }
+        };
+        
+        // 当 DOM 加载完成后初始化应用
+        document.addEventListener('DOMContentLoaded', app.init);
+        
+        // 导出全局对象（用于调试）
+        window.app = app;
+        window.StateManager = StateManager;
+        window.TaskCalculator = TaskCalculator;
+    </script>
+    
+    <!-- Service Worker 注册 -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker 注册成功:', registration);
+                    })
+                    .catch(error => {
+                        console.log('ServiceWorker 注册失败:', error);
+                    });
+            });
         }
     </script>
 </body>
